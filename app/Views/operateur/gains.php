@@ -32,10 +32,10 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="mm-card-title mb-0"><i class="bi bi-cash-stack"></i> Détail des frais perçus</div>
         <div class="d-flex gap-2">
-            <select class="form-select form-select-sm" style="width:auto;">
-                <option>Ce mois-ci</option>
-                <option>Semaine dernière</option>
-                <option>Aujourd'hui</option>
+            <select class="form-select form-select-sm" style="width:auto;" onchange="window.location.href='<?= base_url('operateur/gains') ?>?filter=' + this.value">
+                <option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>Tous</option>
+                <option value="RETRAIT" <?= $filter === 'RETRAIT' ? 'selected' : '' ?>>Retrait</option>
+                <option value="TRANSFERT" <?= $filter === 'TRANSFERT' ? 'selected' : '' ?>>Transfert</option>
             </select>
         </div>
     </div>
