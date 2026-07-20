@@ -35,11 +35,43 @@
     - [ok] TypeOperationModel.php
 
 **Coralie ETU004250**
-- [] Coté Opérateur (Back-office)
-    - [] Interface de configuration des préfixes valides de l'opérateur
-    - [] Interface de gestion et modification du barème de frais par tranche de montant
-    - [] Page de situation des gains générés via les frais (retraits et transferts)
-    - [] Page de situation globale et consultation des comptes clients
+- [ok] Coté Opérateur (Back-office)
+    - [ok] Login operateur
+        - [ok] Formulaire de login avec champs:
+            - Nom d'utilisateur
+            - Mot de passe
+            - Bouton "Se connecter"
+        - [ok] Fonction athenticate() dans controller Operateur
+            - redirect vers 'operateur/comptes' si login réussi
+            - redirect vers 'operateur/login' si login échoué
+
+    - [ok] Interface de configuration des préfixes valides de l'opérateur
+        - [ok] Recuperer la liste des préfixes
+        - [ok] Affichage des prefixes avec boutons (modifier & supprimer)
+            - [ok] Fonction editPrefixe() dans controller Operateur pour valider les update
+            - [ok] Fonction deletePrefixe() dans controller Operateur pour valider la suppression d'un prefixe
+        - [ok] Formulaire d'ajout d'un nouveau prefixe
+            - [ok] Fonction addPrefixe() dans controller Operateur pour valider l'insertion
+
+    - [ok] Interface de gestion et modification du barème de frais par tranche de montant
+        - [ok] Page operations.php avec liste des types d'opérations
+            - [ok] Recuperer la liste des types d'operation
+            - [ok] Affichage de la liste des types d'operation avec bouton 'Modifier' et 'Voir bareme'
+            - [ok] CRUD complet pour les types d'opérations (ajout, modification)
+        - [ok] Page bareme.php pour gérer les barèmes par type d'opération
+            - [ok] Affichage de la liste des bareme par type d'operation
+            - [ok] CRUD complet pour les barèmes de frais (ajout, modification, suppression)
+
+    - [ok] Page de situation des gains générés via les frais (retraits et transferts)
+        - [ok] Statistiques dynamiques (gains retrait, gains transfert, total cumulé)
+        - [ok] Liste des transactions avec pagination
+        - [ok] Données récupérées depuis la vue SQL vue_situation_gains
+
+     - [ok] Page de situation globale et consultation des comptes clients
+        - [ok] Recuperer la liste des clients
+        - [ok] Affichage de la liste avec pagination
+        - [ok] Statistiques dynamiques (nombre de comptes, solde total, solde moyen)
+        - [ok] Recherche par numéro de téléphone
 
 **Funaki ETU004169**
 - [] Coté Client (Interface Mobile)
