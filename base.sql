@@ -1,21 +1,33 @@
 -- ============================================================================
--- SCRIPT DE CRÉATION DE LA BASE DE DONNÉES (SQLite) - VERSION 1
+-- SCRIPT DE CRÉATION DE LA BASE DE DONNÉES INTEGRAL (SQLite) - VERSION FINALE
 -- ============================================================================
 
 -- Activation du support des clés étrangères dans SQLite
 PRAGMA foreign_keys = ON;
 
 -- ----------------------------------------------------------------------------
--- 1. TABLE : CONFIGURATION DES PRÉFIXES OPÉRATEUR
+-- 1. TABLE : COMPTES OPÉRATEURS
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS comptes_operateurs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    mot_de_passe TEXT NOT NULL
+);
+
+-- ----------------------------------------------------------------------------
+-- 2. TABLE : CONFIGURATION DES PRÉFIXES OPÉRATEUR
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS operateur_prefixes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     prefixe TEXT NOT NULL UNIQUE,
+    libelle TEXT,
+    statut TEXT DEFAULT 'actif',
     CONSTRAINT chk_prefixe_format CHECK (length(prefixe) = 3 AND prefixe GLOB '[0-9][0-9][0-9]')
 );
 
 -- ----------------------------------------------------------------------------
--- 2. TABLE : TYPES D'OPÉRATIONS
+-- 3. TABLE : TYPES D'OPÉRATIONS
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS types_operations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +36,7 @@ CREATE TABLE IF NOT EXISTS types_operations (
 );
 
 -- ----------------------------------------------------------------------------
--- 3. TABLE : BARÈMES DES FRAIS
+-- 4. TABLE : BARÈMES DES FRAIS
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS bareme_frais (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,18 +50,20 @@ CREATE TABLE IF NOT EXISTS bareme_frais (
 );
 
 -- ----------------------------------------------------------------------------
--- 4. TABLE : COMPTES CLIENTS
+-- 5. TABLE : COMPTES CLIENTS
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS comptes_clients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     numero_telephone TEXT NOT NULL UNIQUE,
+    nom TEXT,
+    prenom TEXT,
     solde REAL NOT NULL DEFAULT 0.0,
     cree_le TEXT DEFAULT (CURRENT_TIMESTAMP),
     CONSTRAINT chk_solde_positif CHECK (solde >= 0)
 );
 
 -- ----------------------------------------------------------------------------
--- 5. TABLE : HISTORIQUE DES TRANSACTIONS
+-- 6. TABLE : HISTORIQUE DES TRANSACTIONS
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS historique_transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,9 +81,10 @@ CREATE TABLE IF NOT EXISTS historique_transactions (
 );
 
 -- ----------------------------------------------------------------------------
--- 6. VUES ALIMENTATION RAPIDE (STATISTIQUES OPÉRATEUR)
+-- 7. VUE : SITUATION GLOBAL DES GAINS (OPÉRATEUR)
 -- ----------------------------------------------------------------------------
-CREATE VIEW IF NOT EXISTS vue_situation_gains AS
+DROP VIEW IF EXISTS vue_situation_gains;
+CREATE VIEW vue_situation_gains AS
 SELECT 
     t.code AS type_operation,
     COUNT(h.id) AS nombre_transactions,
@@ -77,25 +92,89 @@ SELECT
     SUM(h.frais_appliques) AS total_gains_frais
 FROM historique_transactions h
 JOIN types_operations t ON h.type_operation_id = t.id
-GROUP BY t.code;
+GROUP Clyde t.code;
+
+-- ----------------------------------------------------------------------------
+-- 8. VUE : HISTORIQUE UNIFIÉ DES CLIENTS (AVEC LES GESTIONS DES SIGNES + ET -)
+-- ----------------------------------------------------------------------------
+DROP VIEW IF EXISTS vue_historique_portefeuille_clients;
+CREATE VIEW vue_historique_portefeuille_clients AS
+-- CAS 1 : Le client est l'envoyeur (Source) -> Il est débité du montant et des frais
+SELECT 
+    h.id AS transaction_id,
+    h.compte_source_id AS compte_concerne_id,
+    t.code AS type_code,
+    t.nom AS type_nom,
+    h.montant AS montant_brut,
+    h.frais_appliques,
+    '-' AS sens_mouvement,
+    (h.montant + h.frais_appliques) AS impact_solde,
+    c_dest.numero_telephone AS telephone_tiers,
+    h.effectue_le
+FROM historique_transactions h
+JOIN types_operations t ON h.type_operation_id = t.id
+LEFT JOIN comptes_clients c_dest ON h.compte_destination_id = c_dest.id
+WHERE t.code IN ('RETRAIT', 'TRANSFERT')
+
+UNION ALL
+
+-- CAS 2 : Le client effectue un dépôt -> Il est crédité du montant (sans frais)
+SELECT 
+    h.id AS transaction_id,
+    h.compte_source_id AS compte_concerne_id,
+    t.code AS type_code,
+    t.nom AS type_nom,
+    h.montant AS montant_brut,
+    h.frais_appliques,
+    '+' AS sens_mouvement,
+    h.montant AS impact_solde,
+    NULL AS telephone_tiers,
+    h.effectue_le
+FROM historique_transactions h
+JOIN types_operations t ON h.type_operation_id = t.id
+WHERE t.code = 'DEPOT'
+
+UNION ALL
+
+-- CAS 3 : Le client est le receveur (Destination) -> Il reçoit l'argent (+) sans frais
+SELECT 
+    h.id AS transaction_id,
+    h.compte_destination_id AS compte_concerne_id,
+    'TRANSFERT_RECU' AS type_code,
+    'Transfert reçu' AS type_nom,
+    h.montant AS montant_brut,
+    0.0 AS frais_appliques,
+    '+' AS sens_mouvement,
+    h.montant AS impact_solde,
+    c_source.numero_telephone AS telephone_tiers,
+    h.effectue_le
+FROM historique_transactions h
+JOIN comptes_clients c_source ON h.compte_source_id = c_source.id
+WHERE h.compte_destination_id IS NOT NULL;
+
 
 -- ============================================================================
 -- INJECTION DES DONNÉES INITIALES ET DE TEST
 -- ============================================================================
 
--- Insertion des préfixes valides demandés
-INSERT INTO operateur_prefixes (prefixe) VALUES ('033'), ('037');
+-- Compte de test Opérateur
+INSERT INTO comptes_operateurs (username, email, mot_de_passe) VALUES 
+('Operateur', 'operateur@gmail.com', 'operateur123');
 
--- Insertion des types d'opérations requis
+-- Préfixes valides avec opérateurs à Madagascar
+INSERT INTO operateur_prefixes (prefixe, libelle, statut) VALUES 
+('033', 'Orange Madagascar', 'actif'),
+('037', 'Airtel Madagascar', 'actif');
+
+-- Types d'opérations requis
 INSERT INTO types_operations (code, nom) VALUES 
 ('DEPOT', 'Dépôt de fonds'),
 ('RETRAIT', 'Retrait de fonds'),
 ('TRANSFERT', 'Transfert d''argent');
 
--- Insertion du barème de frais officiel du sujet (Exemple basé sur l'image)
--- On applique ici ce barème pour le RETRAIT et le TRANSFERT par exemple
+-- Barème officiel des frais (pour les retraits id=2 et transferts id=3)
 INSERT INTO bareme_frais (type_operation_id, montant_min, montant_max, frais) VALUES
--- Pour les Retraits (exemple basé sur votre liste)
+-- Retraits
 (2, 100, 1000, 50),
 (2, 1001, 5000, 50),
 (2, 5001, 10000, 100),
@@ -106,12 +185,11 @@ INSERT INTO bareme_frais (type_operation_id, montant_min, montant_max, frais) VA
 (2, 250001, 500000, 1500),
 (2, 500001, 1000000, 2500),
 (2, 1000001, 2000000, 3000),
-
--- Pour les Transferts (Même barème appliqué par défaut ou adaptable)
+-- Transferts
 (3, 100, 1000, 50),
 (3, 1001, 5000, 50),
 (3, 5001, 10000, 100),
-(3, 10001, 25000, 200),
+(3, 10011, 25000, 200),
 (3, 25001, 50000, 400),
 (3, 50011, 100000, 800),
 (3, 100001, 250000, 1500),
@@ -119,7 +197,7 @@ INSERT INTO bareme_frais (type_operation_id, montant_min, montant_max, frais) VA
 (3, 500001, 1000000, 2500),
 (3, 1000001, 2000000, 3000);
 
--- Quelques comptes fictifs pour démarrer les tests de login/opérations
-INSERT INTO comptes_clients (numero_telephone, solde) VALUES 
-('0331234567', 50000.0),
-('0379876543', 5000.0);
+-- Comptes clients fictifs complets pour démarrer les tests
+INSERT INTO comptes_clients (numero_telephone, nom, prenom, solde) VALUES 
+('0331234567', 'RASOANAIVO', 'Jean', 50000.0),
+('0379876543', 'RAKOTO', 'Marie', 5000.0);

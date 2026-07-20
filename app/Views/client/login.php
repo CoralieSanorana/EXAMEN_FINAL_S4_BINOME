@@ -32,7 +32,7 @@
                     <span class="input-group-text"><i class="bi bi-phone"></i></span>
                     <input type="text" name="telephone" class="form-control" id="telephoneInput" placeholder="033 12 345 67" value="<?= old('telephone') ?>" required>
                 </div>
-                <div class="form-text">Aucune inscription requise, la connexion est automatique.</div>
+                <div class="form-text">Si le numéro n'existe pas, votre compte sera créé automatiquement avec 0 Ar de solde.</div>
                 <div id="telephoneError" class="text-danger small mt-1" style="display:none;"></div>
             </div>
 

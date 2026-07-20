@@ -9,10 +9,10 @@
 <div class="row g-3">
     <!-- Colonne Solde disponible -->
     <div class="col-lg-5">
-        <div class="mm-card text-center py-4 h-100 d-flex flex-column justify-content-center">
-            <div class="mm-stat-label mb-2">Solde disponible</div>
-            <div class="display-6 fw-semibold" style="color:#5c677d;"><?= number_format(session()->get('client_solde') ?? 0, 0, '.', ' ') ?> Ar</div>
-            <p class="text-muted small mt-2 mb-0">Compte n&deg; <?= esc(session()->get('client_telephone') ?? '033 12 345 67') ?></p>
+        <div class="mm-card mm-balance-card h-100 d-flex flex-column justify-content-between">
+            <div class="mm-balance-chip"><i class="bi bi-wallet2"></i> Solde disponible</div>
+            <div class="mm-balance-value"><?= number_format(session()->get('client_solde') ?? 0, 0, '.', ' ') ?> Ar</div>
+            <p class="mm-balance-number mb-0">Compte n&deg; <?= esc(session()->get('client_telephone') ?? '033 12 345 67') ?></p>
         </div>
     </div>
 
@@ -22,19 +22,19 @@
             <div class="mm-card-title"><i class="bi bi-lightning-charge"></i> Actions rapides</div>
             <div class="row g-3">
                 <div class="col-4">
-                    <a href="/client/depot" class="btn btn-mm-outline w-100 py-3">
+                    <a href="/client/depot" class="btn mm-quick-action w-100 py-3">
                         <i class="bi bi-download d-block mb-1" style="font-size:1.3rem;"></i>
                         Dépôt
                     </a>
                 </div>
                 <div class="col-4">
-                    <a href="/client/retrait" class="btn btn-mm-outline w-100 py-3">
+                    <a href="/client/retrait" class="btn mm-quick-action w-100 py-3">
                         <i class="bi bi-upload d-block mb-1" style="font-size:1.3rem;"></i>
                         Retrait
                     </a>
                 </div>
                 <div class="col-4">
-                    <a href="/client/transfert" class="btn btn-mm-outline w-100 py-3">
+                    <a href="/client/transfert" class="btn mm-quick-action w-100 py-3">
                         <i class="bi bi-arrow-left-right d-block mb-1" style="font-size:1.3rem;"></i>
                         Transfert
                     </a>

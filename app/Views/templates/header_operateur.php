@@ -1,4 +1,7 @@
 <header class="mm-topbar">
+    <button class="mm-sidebar-toggle" type="button" aria-label="Ouvrir le menu" aria-controls="mobileSidebar" aria-expanded="false">
+        <i class="bi bi-list"></i>
+    </button>
     <a href="#" class="mm-brand">
         <span class="mm-logo">MM</span>
         <span>MobileMoney <strong>Simulateur</strong></span>
