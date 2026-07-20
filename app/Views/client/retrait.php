@@ -15,7 +15,7 @@
             <form>
                 <div class="mb-3">
                     <label class="form-label">Numéro de compte</label>
-                    <input type="text" class="form-control" value="033 12 345 67" disabled>
+                    <input type="text" class="form-control" value="<?= esc(session()->get('client_telephone') ?? '033 12 345 67') ?>" disabled>
                 </div>
 
                 <div class="mb-3">
@@ -24,7 +24,7 @@
                         <input type="number" class="form-control" placeholder="Ex : 75000">
                         <span class="input-group-text">Ar</span>
                     </div>
-                    <div class="form-text">Solde disponible : 452 300 Ar</div>
+                    <div class="form-text">Solde disponible : <?= number_format(session()->get('client_solde') ?? 0, 0, '.', ' ') ?> Ar</div>
                 </div>
 
                 <div class="mb-4">
@@ -48,7 +48,7 @@
             <ul class="list-unstyled mb-0" style="font-size:.9rem;">
                 <li class="d-flex justify-content-between py-2 border-bottom">
                     <span class="text-muted">Solde actuel</span>
-                    <span>452 300 Ar</span>
+                    <span><?= number_format(session()->get('client_solde') ?? 0, 0, '.', ' ') ?> Ar</span>
                 </li>
                 <li class="d-flex justify-content-between py-2 border-bottom">
                     <span class="text-muted">Montant demandé</span>

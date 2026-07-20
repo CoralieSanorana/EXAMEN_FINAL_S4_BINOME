@@ -11,10 +11,10 @@
 
         <div class="mm-user-chip">
             <span class="avatar">JD</span>
-            <span>033 12 345 67</span>
+            <span><?= esc(session()->get('client_telephone') ?? '033 12 345 67') ?></span>
         </div>
 
-        <a href="#" class="btn btn-mm-outline btn-sm">
+        <a href="/client/logout" class="btn btn-mm-outline btn-sm">
             <i class="bi bi-box-arrow-right"></i> Déconnexion
         </a>
     </div>
