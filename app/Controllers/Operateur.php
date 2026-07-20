@@ -4,6 +4,8 @@ namespace App\Controllers;
 use App\Models\CompteOperateurModel;
 use App\Models\CompteClientModel;
 use App\Models\OperateurPrefixeModel;
+use App\Models\OperateurModel;
+use App\Models\ConfigurationCommissionModel;
 use App\Models\OperateurTarifModel;
 use App\Models\HistoriqueTransactionModel;
 use App\Models\BaremeFraisModel;
@@ -276,10 +278,33 @@ class Operateur extends BaseController
 
     public function prefixes(): string
     {
-        $model = new OperateurPrefixeModel();
-        $prefixes = $model->findAll();
+        $prefixeModel = new OperateurPrefixeModel();
+        $operateurModel = new OperateurModel();
+        
+        // Récupérer tous les opérateurs
+        $operateurs = $operateurModel->findAll();
+        
+        // Récupérer tous les préfixes avec jointure pour avoir le nom de l'opérateur
+        $prefixes = $prefixeModel->select('operateur_prefixes.*, operateurs.nom as operateur_nom, operateurs.est_interne')
+                                 ->join('operateurs', 'operateurs.id = operateur_prefixes.operateur_id')
+                                 ->findAll();
+        
+        // Séparer les préfixes : interne vs externe
+        $prefixesInternes = [];
+        $prefixesExternes = [];
+        
+        foreach ($prefixes as $prefixe) {
+            if ($prefixe['est_interne'] == 1) {
+                $prefixesInternes[] = $prefixe;
+            } else {
+                $prefixesExternes[] = $prefixe;
+            }
+        }
+        
         $data = [
-            'prefixes' => $prefixes
+            'prefixes_internes' => $prefixesInternes,
+            'prefixes_externes' => $prefixesExternes,
+            'operateurs' => $operateurs
         ];
         return view('operateur/prefixes', $data);
     }
@@ -289,8 +314,8 @@ class Operateur extends BaseController
         $model = new OperateurPrefixeModel();
         
         $data = [
+            'operateur_id' => $this->request->getPost('operateur_id'),
             'prefixe' => $this->request->getPost('prefixe'),
-            'libelle' => $this->request->getPost('libelle'),
             'statut' => $this->request->getPost('statut') ?? 'actif'
         ];
         
@@ -309,8 +334,8 @@ class Operateur extends BaseController
         $oldPrefixe = $model->find($id);
         
         $data = [
+            'operateur_id' => $this->request->getPost('operateur_id'),
             'prefixe' => $this->request->getPost('prefixe'),
-            'libelle' => $this->request->getPost('libelle'),
             'statut' => $this->request->getPost('statut')
         ];
         
@@ -336,8 +361,95 @@ class Operateur extends BaseController
         
         return redirect()->to('/operateur/prefixes')->with('error', 'Erreur lors de la suppression du préfixe');
     }
+
     public function logout(){
         session()->destroy();
         return redirect()->to('/operateur/login');
+    }
+
+    public function commissions(): string
+    {
+        $commissionModel = new ConfigurationCommissionModel();
+        $operateurModel = new OperateurModel();
+        
+        // Récupérer tous les opérateurs
+        $operateurs = $operateurModel->findAll();
+        
+        // Récupérer toutes les configurations de commissions avec jointures
+        $commissions = $commissionModel->select('configuration_commissions.*, 
+                                                    os.nom as operateur_source_nom, 
+                                                    od.nom as operateur_destination_nom')
+                                         ->join('operateurs os', 'os.id = configuration_commissions.operateur_source_id')
+                                         ->join('operateurs od', 'od.id = configuration_commissions.operateur_destination_id')
+                                         ->findAll();
+        
+        $data = [
+            'commissions' => $commissions,
+            'operateurs' => $operateurs
+        ];
+        return view('operateur/commission', $data);
+    }
+
+    public function addCommission()
+    {
+        $model = new ConfigurationCommissionModel();
+        
+        $operateurSourceId = $this->request->getPost('operateur_source_id');
+        $operateurDestinationId = $this->request->getPost('operateur_destination_id');
+        
+        // Vérifier que les opérateurs sont différents
+        if ($operateurSourceId == $operateurDestinationId) {
+            return redirect()->to('/operateur/commissions')->with('error', 'L\'opérateur destination doit être différent de l\'opérateur source');
+        }
+        
+        $data = [
+            'operateur_source_id' => $operateurSourceId,
+            'operateur_destination_id' => $operateurDestinationId,
+            'pourcentage_commission' => $this->request->getPost('pourcentage_commission')
+        ];
+        
+        if ($model->insert($data)) {
+            return redirect()->to('/operateur/commissions')->with('success', 'Commission ajoutée avec succès');
+        }
+        
+        return redirect()->to('/operateur/commissions')->with('error', 'Erreur lors de l\'ajout de la commission');
+    }
+
+    public function editCommission($id)
+    {
+        $model = new ConfigurationCommissionModel();
+        
+        // Récupérer l'ancienne commission pour comparer
+        $oldCommission = $model->find($id);
+        
+        $data = [
+            'operateur_source_id' => $this->request->getPost('operateur_source_id'),
+            'operateur_destination_id' => $this->request->getPost('operateur_destination_id'),
+            'pourcentage_commission' => $this->request->getPost('pourcentage_commission')
+        ];
+        
+        // Si les opérateurs n'ont pas changé, on ne vérifie pas l'unicité
+        if ($oldCommission && 
+            $oldCommission['operateur_source_id'] == $data['operateur_source_id'] && 
+            $oldCommission['operateur_destination_id'] == $data['operateur_destination_id']) {
+            $model->skipValidation(true);
+        }
+        
+        if ($model->update($id, $data)) {
+            return redirect()->to('/operateur/commissions')->with('success', 'Commission modifiée avec succès');
+        }
+        
+        return redirect()->to('/operateur/commissions')->with('error', 'Erreur lors de la modification de la commission');
+    }
+
+    public function deleteCommission($id)
+    {
+        $model = new ConfigurationCommissionModel();
+        
+        if ($model->delete($id)) {
+            return redirect()->to('/operateur/commissions')->with('success', 'Commission supprimée avec succès');
+        }
+        
+        return redirect()->to('/operateur/commissions')->with('error', 'Erreur lors de la suppression de la commission');
     }
 }
