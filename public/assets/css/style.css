@@ -484,3 +484,25 @@ body {
   .mm-balance-card { min-height: 205px; }
   .mm-quick-action { min-height: 96px; font-size: .8rem; }
 }
+/* Police locale : aucun appel à Google Fonts */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../vendor/fonts/roboto-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../vendor/fonts/roboto-500.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 500 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../vendor/fonts/roboto-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
