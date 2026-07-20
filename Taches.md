@@ -34,7 +34,6 @@
     - [ok] OperateurPrefixeModel.php
     - [ok] TypeOperationModel.php
 
-
 **Coralie ETU004250**
 - [ok] Coté Opérateur (Back-office)
     - [ok] Login operateur
