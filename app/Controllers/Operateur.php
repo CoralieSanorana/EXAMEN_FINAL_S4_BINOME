@@ -27,7 +27,7 @@ class Operateur extends BaseController
         if ($operateur && $password==$operateur['mot_de_passe']) {
             session()->set('operateur_name', $operateur['username']);
             session()->set('operateur_email', $operateur['email']);
-            session()->set('connecter', true);
+            session()->set('logged_in', true);
             return redirect()->to('/operateur/gains');
         }
 
