@@ -51,12 +51,13 @@ class HistoriqueTransactionModel extends Model
 
     /**
      * Récupère les gains séparés par réseau (interne vs externe)
+     * - Interne : somme des frais_bareme sur les transactions émises par un numéro de notre opérateur
+     * - Externe : somme des frais_commission sur les transferts de notre opérateur vers les autres opérateurs
      */
     public function obtenirGainsSepares()
     {
         $db = \Config\Database::connect();
-        $results = $db->table('vue_situation_gains')->get()->getResultArray();
-        
+
         $gains = [
             'interne' => [
                 'retrait' => 0,
@@ -71,35 +72,56 @@ class HistoriqueTransactionModel extends Model
                 'details' => []
             ]
         ];
-        
-        foreach ($results as $row) {
-            $reseau = $row['reseau_concerne'] ?? 'Non défini';
-            $type = $row['type_operation'];
-            $totalFrais = (float) ($row['total_gains_frais'] ?? 0);
-            $totalBareme = (float) ($row['total_gains_bareme'] ?? 0);
-            $totalCommission = (float) ($row['total_gains_commission'] ?? 0);
-            
-            if (strpos($reseau, 'Notre Réseau') !== false || $reseau === 'Notre Réseau') {
-                // Gains internes
-                if ($type === 'RETRAIT') {
-                    $gains['interne']['retrait'] += $totalFrais;
-                } elseif ($type === 'TRANSFERT') {
-                    $gains['interne']['transfert'] += $totalFrais;
-                }
-                $gains['interne']['total'] += $totalFrais;
-            } else {
-                // Gains externes (commissions)
-                if ($type === 'TRANSFERT') {
-                    $gains['externe']['transfert'] += $totalFrais;
-                    $gains['externe']['details'][] = [
-                        'operateur' => $reseau,
-                        'montant' => $totalCommission
-                    ];
-                }
-                $gains['externe']['total'] += $totalFrais;
+
+        $internes = $db->table('historique_transactions h')
+            ->select('t.code AS type_operation, SUM(h.frais_bareme) AS total_bareme')
+            ->join('types_operations t', 't.id = h.type_operation_id')
+            ->join('comptes_clients cs', 'cs.id = h.compte_source_id')
+            ->join('operateur_prefixes ops', "ops.prefixe = substr(cs.numero_telephone, 1, 3) AND ops.statut = 'actif'", 'left')
+            ->join('operateurs os', 'os.id = ops.operateur_id', 'left')
+            ->where('os.est_interne', 1)
+            ->whereIn('t.code', ['RETRAIT', 'TRANSFERT'])
+            ->groupBy('t.code')
+            ->get()
+            ->getResultArray();
+
+        foreach ($internes as $row) {
+            $type = $row['type_operation'] ?? null;
+            $montant = (float) ($row['total_bareme'] ?? 0);
+
+            if ($type === 'RETRAIT') {
+                $gains['interne']['retrait'] = $montant;
+            } elseif ($type === 'TRANSFERT') {
+                $gains['interne']['transfert'] = $montant;
             }
         }
-        
+
+        $gains['interne']['total'] = $gains['interne']['retrait'] + $gains['interne']['transfert'];
+
+        $externes = $db->table('historique_transactions h')
+            ->select("od.nom AS operateur_destination, SUM(h.frais_commission) AS total_commission")
+            ->join('types_operations t', 't.id = h.type_operation_id')
+            ->join('comptes_clients cs', 'cs.id = h.compte_source_id')
+            ->join('operateur_prefixes ops', "ops.prefixe = substr(cs.numero_telephone, 1, 3) AND ops.statut = 'actif'", 'left')
+            ->join('operateurs os', 'os.id = ops.operateur_id', 'left')
+            ->join('operateurs od', 'od.id = h.operateur_destination_id', 'left')
+            ->where('os.est_interne', 1)
+            ->where('t.code', 'TRANSFERT')
+            ->where('od.est_interne', 0)
+            ->groupBy('od.id, od.nom')
+            ->get()
+            ->getResultArray();
+
+        foreach ($externes as $row) {
+            $montant = (float) ($row['total_commission'] ?? 0);
+            $gains['externe']['transfert'] += $montant;
+            $gains['externe']['total'] += $montant;
+            $gains['externe']['details'][] = [
+                'operateur' => $row['operateur_destination'] ?? 'Opérateur inconnu',
+                'montant' => $montant,
+            ];
+        }
+
         return $gains;
     }
 
