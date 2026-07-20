@@ -417,7 +417,7 @@ class Client extends BaseController
         $this->checkAuth();
 
         $montant = $this->request->getPost('montant');
-        $saisieDestinataires = (string) $this->request->getPost('numero_destinataires');
+        $saisieDestinataires = $this->request->getPost('numero_destinataires');
         $inclureFraisRetrait = (bool) $this->request->getPost('inclure_frais_retrait');
         $clientId = $this->session->get('client_id');
 
@@ -612,9 +612,13 @@ class Client extends BaseController
         }
     }
 
-    private function extraireNumerosDestinataires(string $saisie): array
+    private function extraireNumerosDestinataires($saisie): array
     {
-        $elements = preg_split('/[\r\n,;]+/', $saisie) ?: [];
+        if (is_array($saisie)) {
+            $elements = $saisie;
+        } else {
+            $elements = preg_split('/[\r\n,;]+/', (string) $saisie) ?: [];
+        }
 
         return array_values(array_filter(array_map(function ($numero) {
             return $this->normaliserNumeroTelephone($numero);

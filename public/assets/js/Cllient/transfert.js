@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const numeroEmetteur = document.getElementById('numeroEmetteur');
-    const numerosDestinataires = document.getElementById('numerosDestinataires');
+    const destinatairesContainer = document.getElementById('destinatairesContainer');
+    const addDestinataireBtn = document.getElementById('addDestinataireBtn');
     const destinatairesInfo = document.getElementById('destinatairesInfo');
     const destinatairesResume = document.getElementById('destinatairesResume');
     const destinatairesPreview = document.getElementById('destinatairesPreview');
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const emetteurNormalise = normaliserNumero(numeroEmetteur.value);
     const prefixesOperateurs = Array.isArray(window.prefixesOperateurs) ? window.prefixesOperateurs : [];
     const prefixeVersOperateur = {};
+    const rechercheTimers = new WeakMap();
 
     prefixesOperateurs.forEach(item => {
         if (item && item.prefixe) {
@@ -87,19 +89,113 @@ document.addEventListener('DOMContentLoaded', function() {
         return bareme.length ? bareme[bareme.length - 1].frais : 0;
     }
 
-    function extraireNumeros() {
-        return (numerosDestinataires.value || '')
-            .split(/[\n,;]+/)
-            .map(normaliserNumero)
-            .filter(Boolean);
-    }
-
     function trouverOperateur(numero) {
         const prefixe = String(numero || '').substring(0, 3);
         return prefixeVersOperateur[prefixe] || null;
     }
 
+    function getRows() {
+        return Array.from(destinatairesContainer.querySelectorAll('.destinataire-row'));
+    }
+
+    function creerLigne(numero = '') {
+        const row = document.createElement('div');
+        row.className = 'card shadow-sm mb-3 destinataire-row border-light';
+        row.innerHTML = `
+            <div class="card-body p-3">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label small fw-bold text-secondary mb-2">
+                            <i class="bi bi-person-fill text-primary me-1"></i> Destinataire N°
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-muted">
+                                <i class="bi bi-telephone-plus"></i>
+                            </span>
+                            <input type="text" name="numero_destinataires[]" class="form-control destinataire-input border-start-0 ps-0" placeholder="Ex : 0341234567" value="${numero}">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label small fw-bold text-secondary mb-2">Identité du client</label>
+                        <div class="destinataire-client small d-flex align-items-center bg-light text-muted border rounded px-3" style="height: 38px;">
+                            <i class="bi bi-hourglass-split me-2"></i>En attente de saisie...
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button type="button" class="btn btn-outline-primary btn-sm add-row-btn w-50" style="height: 38px;" title="Ajouter un destinataire">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn w-50" style="height: 38px;" title="Supprimer">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        destinatairesContainer.appendChild(row);
+        attacherLigne(row);
+        renumeroterLignes();
+        return row;
+    }
+
+    function renumeroterLignes() {
+        getRows().forEach((row, index) => {
+            const label = row.querySelector('.col-md-5 .form-label');
+            if (label) {
+                label.innerHTML = `<i class="bi bi-person-fill text-primary me-1"></i> Destinataire N°${index + 1}`;
+            }
+        });
+
+        const removeButtons = destinatairesContainer.querySelectorAll('.remove-row-btn');
+        const disableRemove = getRows().length === 1;
+        removeButtons.forEach(button => {
+            button.disabled = disableRemove;
+            if (disableRemove) {
+                button.classList.add('opacity-50');
+            } else {
+                button.classList.remove('opacity-50');
+            }
+        });
+    }
+
+    function getInputValue(row) {
+        const input = row.querySelector('.destinataire-input');
+        return normaliserNumero(input ? input.value : '');
+    }
+
+    function setClientInfo(row, message, type = 'muted') {
+        const box = row.querySelector('.destinataire-client');
+        if (!box) return;
+
+        row.dataset.lookupState = type;
+        box.className = 'destinataire-client small d-flex align-items-center border rounded px-3';
+        box.style.height = '38px';
+
+        if (type === 'success') {
+            box.classList.add('bg-success-subtle', 'border-success-subtle', 'text-success', 'fw-semibold');
+            box.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> ${message}`;
+        } else if (type === 'error') {
+            box.classList.add('bg-danger-subtle', 'border-danger-subtle', 'text-danger');
+            box.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i> ${message}`;
+        } else if (type === 'info') {
+            box.classList.add('bg-info-subtle', 'border-info-subtle', 'text-info-emphasis');
+            box.innerHTML = `<div class="spinner-border spinner-border-sm me-2" role="status"></div> ${message}`;
+        } else {
+            box.classList.add('bg-light', 'text-muted');
+            box.innerHTML = `<i class="bi bi-hourglass-split me-2"></i> ${message}`;
+        }
+    }
+
+    function extraireNumeros() {
+        return getRows()
+            .map(getInputValue)
+            .filter(Boolean);
+    }
+
     function analyserDestinataires() {
+        const rows = getRows();
         const numeros = extraireNumeros();
         const erreurs = [];
         const doublons = [];
@@ -108,6 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const prefixesInconnus = [];
         const operateursDetectes = {};
         const compteParNumero = {};
+        let verificationEnCours = false;
+        let clientIntrouvable = false;
 
         numeros.forEach(numero => {
             compteParNumero[numero] = (compteParNumero[numero] || 0) + 1;
@@ -162,6 +260,29 @@ document.addEventListener('DOMContentLoaded', function() {
             erreurs.push('Les numéros d\'un envoi multiple doivent appartenir au même opérateur');
         }
 
+        rows.forEach(row => {
+            const numero = getInputValue(row);
+            if (!numero) {
+                return;
+            }
+
+            const state = row.dataset.lookupState || 'muted';
+            if (state === 'info') {
+                verificationEnCours = true;
+            }
+            if (state === 'error') {
+                clientIntrouvable = true;
+            }
+        });
+
+        if (!erreurs.length && verificationEnCours) {
+            erreurs.push('Vérification des destinataires en cours...');
+        }
+
+        if (!erreurs.length && clientIntrouvable) {
+            erreurs.push('Un ou plusieurs destinataires sont introuvables');
+        }
+
         return {
             numeros: uniques,
             erreurs,
@@ -206,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fraisApplicables.textContent = '0 Ar';
         totalDebit.textContent = '0 Ar';
         nouveauSolde.textContent = formatNombre(solde) + ' Ar';
-        nouveauSolde.style.color = '#5c677d';
+        nouveauSolde.className = "fw-bold text-secondary";
     }
 
     function mettreAJourInfosDestinataires(analyse) {
@@ -214,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
         destinatairesError.style.display = 'none';
 
         if (analyse.erreurs.length) {
-            destinatairesError.innerHTML = analyse.erreurs.join('<br>');
+            destinatairesError.innerHTML = `<i class="bi bi-exclamation-octagon-fill me-2"></i> ${analyse.erreurs.join('<br>')}`;
             destinatairesError.style.display = 'block';
             return;
         }
@@ -223,8 +344,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const suffixeOperateur = analyse.operateurCommun ? ` - Opérateur : ${analyse.operateurCommun}` : '';
-        destinatairesResume.textContent = `${analyse.numeros.length} destinataire(s) prêt(s) à recevoir le transfert${suffixeOperateur}.`;
+        const suffixeOperateur = analyse.operateurCommun ? ` | <span class="badge bg-primary">${analyse.operateurCommun}</span>` : '';
+        destinatairesResume.innerHTML = `<i class="bi bi-people-fill text-success me-2"></i><strong>${analyse.numeros.length}</strong> destinataire(s) prêt(s)${suffixeOperateur}`;
         destinatairesPreview.textContent = analyse.numeros.join(', ');
         destinatairesInfo.style.display = 'block';
     }
@@ -254,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fraisApplicables.textContent = '0 Ar';
             totalDebit.textContent = '0 Ar';
             nouveauSolde.textContent = formatNombre(solde) + ' Ar';
-            nouveauSolde.style.color = '#5c677d';
+            nouveauSolde.className = "fw-bold text-secondary";
             submitBtn.disabled = true;
             return false;
         }
@@ -269,32 +390,158 @@ document.addEventListener('DOMContentLoaded', function() {
         nouveauSolde.textContent = formatNombre(resume.nouveauSolde) + ' Ar';
 
         if (resume.erreur) {
-            montantError.textContent = resume.erreur;
+            montantError.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i> ${resume.erreur}`;
             montantError.style.display = 'block';
             submitBtn.disabled = true;
             return false;
         }
 
         if (resume.totalDebit > solde) {
-            montantError.textContent = `Solde insuffisant (débit total estimé : ${formatNombre(resume.totalDebit)} Ar)`;
+            montantError.innerHTML = `<i class="bi bi-shield-slash-fill me-2"></i> Solde insuffisant (Débit requis : <strong>${formatNombre(resume.totalDebit)} Ar</strong>)`;
             montantError.style.display = 'block';
             submitBtn.disabled = true;
             return false;
         }
 
         if (resume.nouveauSolde < 1000) {
-            nouveauSolde.style.color = '#dc3545';
+            nouveauSolde.className = "fw-bold text-danger animate__animated animate__pulse";
         } else if (resume.nouveauSolde < 5000) {
-            nouveauSolde.style.color = '#ffc107';
+            nouveauSolde.className = "fw-bold text-warning";
         } else {
-            nouveauSolde.style.color = '#5c677d';
+            nouveauSolde.className = "fw-bold text-success";
         }
 
         submitBtn.disabled = false;
         return true;
     }
 
-    numerosDestinataires.addEventListener('input', mettreAJourResume);
+    function rechercherClientPourLigne(row) {
+        const input = row.querySelector('.destinataire-input');
+        if (!input) return;
+
+        const numero = normaliserNumero(input.value);
+        const regexNumero = /^[0-9]{8,10}$/;
+
+        if (!numero) {
+            setClientInfo(row, 'En attente de saisie...', 'muted');
+            mettreAJourResume();
+            return;
+        }
+
+        if (!regexNumero.test(numero)) {
+            setClientInfo(row, 'Format invalide', 'error');
+            mettreAJourResume();
+            return;
+        }
+
+        if (numero === emetteurNormalise) {
+            setClientInfo(row, 'Numéro émetteur interdit', 'error');
+            mettreAJourResume();
+            return;
+        }
+
+        const operateur = trouverOperateur(numero);
+        if (!operateur) {
+            setClientInfo(row, 'Préfixe inconnu', 'error');
+            mettreAJourResume();
+            return;
+        }
+
+        setClientInfo(row, `Vérification (${operateur.operateur_nom})...`, 'info');
+
+        fetch(`/client/rechercherClient?numero=${encodeURIComponent(numero)}`)
+            .then(response => response.json())
+            .then(data => {
+                const currentNumero = normaliserNumero(input.value);
+                if (currentNumero !== numero) {
+                    return;
+                }
+
+                if (data.success && data.client) {
+                    const nomComplet = `${data.client.prenom || ''} ${data.client.nom || ''}`.trim();
+                    setClientInfo(row, `${nomComplet} (${data.client.numero_telephone})`, 'success');
+                } else {
+                    setClientInfo(row, data.message || 'Client introuvable', 'error');
+                }
+
+                mettreAJourResume();
+            })
+            .catch(() => {
+                setClientInfo(row, 'Erreur de connexion serveur', 'error');
+                mettreAJourResume();
+            });
+    }
+
+    function programmerRecherche(row) {
+        const input = row.querySelector('.destinataire-input');
+        if (!input) return;
+
+        if (rechercheTimers.has(input)) {
+            clearTimeout(rechercheTimers.get(input));
+        }
+
+        const timer = setTimeout(() => rechercherClientPourLigne(row), 350);
+        rechercheTimers.set(input, timer);
+    }
+
+    function attacherLigne(row) {
+        const input = row.querySelector('.destinataire-input');
+        const addBtn = row.querySelector('.add-row-btn');
+        const removeBtn = row.querySelector('.remove-row-btn');
+
+        if (input) {
+            input.addEventListener('input', function() {
+                programmerRecherche(row);
+                mettreAJourResume();
+            });
+            input.addEventListener('blur', function() {
+                rechercherClientPourLigne(row);
+            });
+        }
+
+        if (addBtn) {
+            addBtn.addEventListener('click', function() {
+                const nouvelleLigne = creerLigne('');
+                const nouvelInput = nouvelleLigne.querySelector('.destinataire-input');
+                if (nouvelInput) {
+                    nouvelInput.focus();
+                }
+                mettreAJourResume();
+            });
+        }
+
+        if (removeBtn) {
+            removeBtn.addEventListener('click', function() {
+                if (getRows().length === 1) {
+                    const seulInput = row.querySelector('.destinataire-input');
+                    if (seulInput) {
+                        seulInput.value = '';
+                    }
+                    setClientInfo(row, 'En attente de saisie...', 'muted');
+                } else {
+                    row.remove();
+                    renumeroterLignes();
+                }
+
+                mettreAJourResume();
+            });
+        }
+    }
+
+    addDestinataireBtn.addEventListener('click', function() {
+        const nouvelleLigne = creerLigne('');
+        const nouvelInput = nouvelleLigne.querySelector('.destinataire-input');
+        if (nouvelInput) {
+            nouvelInput.focus();
+        }
+        mettreAJourResume();
+    });
+
+    getRows().forEach(row => {
+        attacherLigne(row);
+        rechercherClientPourLigne(row);
+    });
+
     montantInput.addEventListener('input', mettreAJourResume);
     inclureFraisRetrait.addEventListener('change', mettreAJourResume);
 
@@ -305,8 +552,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Traitement en cours...';
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Traitement de la transaction...';
     });
 
+    renumeroterLignes();
     mettreAJourResume();
 });
