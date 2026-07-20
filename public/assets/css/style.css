@@ -297,7 +297,8 @@ body {
   padding: .35em .75em;
 }
 
-.badge-depot { background: #e6f4ea; color: #1e8e3e; }
+.badge-depot { background: #e6f4ea; color: #07d943; }
+.badge-transfert_recu { background: #e6f4ea; color: #1e8e3e; }
 .badge-retrait { background: #fce8e6; color: #c5221f; }
 .badge-transfert { background: #e8f0fe; color: #1a56c4; }
 

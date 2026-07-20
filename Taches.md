@@ -34,7 +34,8 @@
     - [ok] OperateurPrefixeModel.php
     - [ok] TypeOperationModel.php
 
-**Funaki ETU004169**
+
+**Coralie ETU004250**
 - [ok] Coté Opérateur (Back-office)
     - [ok] Login operateur
         - [ok] Formulaire de login avec champs:
@@ -73,14 +74,103 @@
         - [ok] Statistiques dynamiques (nombre de comptes, solde total, solde moyen)
         - [ok] Recherche par numéro de téléphone
 
-**Coralie ETU004250**
+**Funaki ETU004169**
 - [] Coté Client (Interface Mobile)
-    - [] Login automatique via le numéro de téléphone (authentification/création directe)
-    - [] Consultation du solde actuel
-    - [] Formulaire de dépôt (simulation automatique)
-    - [] Formulaire de retrait (simulation automatique avec calcul des frais)
-    - [] Formulaire de transfert vers un autre numéro (avec validation du destinataire)
-    - [] Page de consultation de l'historique personnel des opérations
+    - [ok] Login automatique via le numéro de téléphone (authentification/création directe)
+        - [ok] Controller Client.php: login(), authenticate(), logout()
+        - [ok] Session management with client_id, client_telephone, client_solde
+        - [ok] Security checks via checkAuth() method
+        - [ok] CSRF protection on login form
+        - [ok] NoCache filter to prevent back-button access after logout
+        - [ok] Routes grouped and secured in Routes.php
+        - [ok] Default route redirects to login
+    - [ok] Consultation du solde actuel
+        - [ok] Dynamic balance display from session
+        - [ok] Real-time balance updates after operations
+        - [ok] Sidebar navigation with active page highlighting
+        - [ok] Transaction history display on dashboard with pagination
+        - [ok] Filter by operation type (all, depot, retrait, transfert)
+        - [ok] "Voir tout" button to show all transactions
+        - [ok] Real pagination with page navigation
+    - [ok] Consultation des Historiques du comptes
+        - [ok] Controller Client.php: historique() method with pagination
+        - [ok] Parameters: page, per_page, filter
+        - [ok] Transaction history retrieval via HistoriqueTransactionModel
+        - [ok] Filter by operation type (DEPOT, RETRAIT, TRANSFERT)
+        - [ok] Pagination with array_slice
+        - [ok] View historique.php: dynamic table with real data
+        - [ok] Filter dropdown with onchange redirect
+        - [ok] Functional pagination (Précédent/Suivant, page numbers)
+        - [ok] Disabled state for pagination buttons at boundaries
+        - [ok] Transaction counter: "X sur Y transaction(s)"
+        - [ok] Empty state when no transactions found
+        - [ok] Dynamic badges and signs (+/-) based on operation type  
+    - [ok] Formulaire de dépôt (simulation automatique)
+        - [ok] Controller Client.php: processDepot() method
+        - [ok] Validation: montant positif
+        - [ok] No fees for deposit (frais = 0)
+        - [ok] Database transaction for integrity
+        - [ok] Balance update in comptes_clients table (addition)
+        - [ok] Transaction history insertion in historique_transactions table
+        - [ok] Session update with new balance
+        - [ok] Flash messages (success/error) with Bootstrap alerts
+        - [ok] View depot.php: form with CSRF, dynamic IDs
+        - [ok] JavaScript depot.js: real-time validation, summary update
+        - [ok] Client-side: minimum 100 Ar, maximum 10 000 000 Ar
+        - [ok] Real-time summary: montant, frais (0), nouveau solde
+        - [ok] Visual indicators (green for deposit)
+        - [ok] Double submission prevention with loading state
+    - [ok] Formulaire de transfert vers un autre numéro (avec validation du destinataire)
+        - [ok] SQL script: ajouter_nom_comptes.sql to add nom and prenom columns
+        - [ok] CompteClientModel: updated allowedFields to include nom, prenom
+        - [ok] Controller Client.php: rechercherClient() AJAX endpoint
+        - [ok] AJAX search by phone number (excluding current user)
+        - [ok] Returns client id, nom, prenom, numero_telephone
+        - [ok] Controller Client.php: processTransfert() method
+        - [ok] Validation: montant positif, destinataire valide (pas soi-même)
+        - [ok] Fee calculation using BaremeFraisModel (same as retrait)
+        - [ok] Balance check including fees
+        - [ok] Database transaction: deduct from sender, add to recipient
+        - [ok] Transaction history insertion with source and destination
+        - [ok] Session update with new sender balance
+        - [ok] Flash messages with recipient name in success message
+        - [ok] View transfert.php: form with CSRF, dynamic IDs
+        - [ok] AJAX recipient lookup display (nom + prenom)
+        - [ok] Hidden field for destinataire_id
+        - [ok] JavaScript transfert.js: real-time validation, AJAX lookup
+        - [ok] Debounced AJAX search (500ms)
+        - [ok] Client-side: minimum 100 Ar, balance checks
+        - [ok] Real-time summary: montant, frais, nouveau solde
+        - [ok] Visual indicators for low balance
+        - [ok] Submit button disabled until recipient found and amount valid
+        - [ok] Double submission prevention with loading state
+        - [ok] Controller Client.php: processRetrait() method
+        - [ok] Validation: montant positif, solde suffisant, solde incluant frais
+        - [ok] Automatic fee calculation using BaremeFraisModel
+        - [ok] Database transaction for integrity
+        - [ok] Balance update in comptes_clients table
+        - [ok] Transaction history insertion in historique_transactions table
+        - [ok] Session update with new balance
+        - [ok] Flash messages (success/error) with Bootstrap alerts
+        - [ok] View retrait.php: form with CSRF, dynamic IDs
+        - [ok] JavaScript retrait.js: real-time validation, fee calculation, summary update
+        - [ok] Client-side: minimum 100 Ar, balance checks, visual indicators
+        - [ok] Double submission prevention with loading state
+    - [ok] Page profil.php avec statistiques et graphique
+        - [ok] HistoriqueTransactionModel: getStatistiquesClient() method
+        - [ok] Statistics: total transactions, count by type (depot, retrait, transfert envoyé/recu)
+        - [ok] Statistics: total amounts by type
+        - [ok] Statistics: transactions grouped by month for chart
+        - [ok] CompteClientModel: updated validation rules for name update
+        - [ok] Controller Client.php: profil() method
+        - [ok] Controller Client.php: updateProfil() method
+        - [ok] View profil.php: personal info form (nom, prenom modifiables, telephone non modifiable)
+        - [ok] View profil.php: statistics cards with counts and amounts
+        - [ok] View profil.php: Chart.js line chart for monthly evolution
+        - [ok] Chart.js: 4 datasets (depot, retrait, transfert envoyé, transfert recu)
+        - [ok] Chart.js: minimalist design with lines, filled areas
+        - [ok] Routes.php: added profil and updateProfil routes
+        - [ok] sidebar_client.php: added "Mon profil" link
 
 **Coralie ETU004250**
 - [] Validations et Logique Métier

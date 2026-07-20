@@ -10,8 +10,8 @@
         </span>
 
         <div class="mm-user-chip">
-            <span class="avatar">JD</span>
-            <span><?= esc(session()->get('client_telephone') ?? '033 12 345 67') ?></span>
+            <span class="avatar"><?= substr(session()->get('client_prenom') ?? 'JD', 0, 2) ?></span>
+            <span><?= esc((session()->get('client_prenom') ?? '') . ' ' . (session()->get('client_nom') ?? '')) ?> (<?= esc(session()->get('client_telephone') ?? '033 12 345 67') ?>)</span>
         </div>
 
         <a href="/client/logout" class="btn btn-mm-outline btn-sm">
