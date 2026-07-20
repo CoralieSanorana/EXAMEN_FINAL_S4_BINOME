@@ -308,3 +308,207 @@ GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission
 12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 13 SYSTEMPATH\rewrite.php(44): require_once('D:\\EXAMEN FINALE\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
 DEBUG - 2026-07-20 14:41:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:10:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:45:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:46:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:47:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:48:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:48:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:48:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:48:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:48:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:48:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:49:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:50:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:53:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:53:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:56:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 20:58:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 20:58:12 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 29.
+ 1 APPPATH\Views\operateur\gains.php(29): number_format('150,00', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 20:59:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 20:59:13 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 29.
+ 1 APPPATH\Views\operateur\gains.php(29): number_format('150,00', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 20:59:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 20:59:14 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 29.
+ 1 APPPATH\Views\operateur\gains.php(29): number_format('150,00', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 20:59:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 20:59:14 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 29.
+ 1 APPPATH\Views\operateur\gains.php(29): number_format('150,00', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 21:01:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 21:01:08 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 39.
+ 1 APPPATH\Views\operateur\gains.php(39): number_format('1,25', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 21:01:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 21:01:10 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 39.
+ 1 APPPATH\Views\operateur\gains.php(39): number_format('1,25', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 21:01:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 21:01:32 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 49.
+ 1 APPPATH\Views\operateur\gains.php(49): number_format('151,25', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 21:01:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 21:01:45 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 66.
+ 1 APPPATH\Views\operateur\gains.php(66): number_format('0,00', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 21:02:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 21:02:07 --> TypeError: number_format(): Argument #1 ($num) must be of type float, string given
+[Method: GET, Route: operateur/gains]
+in APPPATH\Views\operateur\gains.php on line 98.
+ 1 APPPATH\Views\operateur\gains.php(98): number_format('1,25', 2, ',', ' ')
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\app\\Views\\operateur\\gains.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('operateur/gains', [], true)
+ 5 APPPATH\Controllers\Operateur.php(133): view('operateur/gains', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->gains()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\S4\\Systeme d\'information\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 21:02:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 21:04:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

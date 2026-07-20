@@ -529,9 +529,35 @@ class Client extends BaseController
         $totalFraisCommission = 0.0;
         $totalDebit = 0.0;
 
-        foreach ($numerosUniques as $numero) {
+        /*foreach ($numerosUniques as $numero) {
             $destinataire = $destinatairesParNumero[$numero];
             $detail = $this->calculerDetailTransfert($montantParDestinataire, $destinataire['numero_telephone'], $typeTransfert, $typeRetrait, $inclureFraisRetrait);
+            $detail['destinataire'] = $destinataire;
+            $detailsTransferts[] = $detail;
+
+            $totalFraisRetrait += $detail['frais_retrait'];
+            $totalMontantTransfere += $detail['montant_transfert'];
+            $totalFraisTransfert += $detail['frais_transfert'];
+            $totalFraisCommission += $detail['frais_commission'];
+            $totalDebit += $detail['total_debit'];
+        }*/
+        // Récupérer d'abord l'opérateur de l'émetteur via son numéro de téléphone
+        $operateurEmetteur = $this->operateurPrefixeModel->trouverOperateurParNumero($numeroEmetteur);
+        $operateurEmetteurId = $operateurEmetteur ? (int)$operateurEmetteur['operateur_id'] : null;
+
+        foreach ($numerosUniques as $numero) {
+            $destinataire = $destinatairesParNumero[$numero];
+            
+            // AJOUT de $operateurEmetteurId en dernier paramètre ici :
+            $detail = $this->calculerDetailTransfert(
+                $montantParDestinataire, 
+                $destinataire['numero_telephone'], 
+                $typeTransfert, 
+                $typeRetrait, 
+                $inclureFraisRetrait, 
+                $operateurEmetteurId
+            );
+            
             $detail['destinataire'] = $destinataire;
             $detailsTransferts[] = $detail;
 
@@ -630,6 +656,7 @@ class Client extends BaseController
         return preg_replace('/[\s\-\.]/', '', trim((string) $numero)) ?? '';
     }
 
+    /*
     private function calculerDetailTransfert(float $montantBase, ?string $numeroDestinataire, array $typeTransfert, ?array $typeRetrait, bool $inclureFraisRetrait): array
     {
         $fraisRetraitTheorique = 0.0;
@@ -646,6 +673,51 @@ class Client extends BaseController
         $operateurDestination = $this->operateurPrefixeModel->trouverOperateurParNumero($numeroDestinataire);
         $operateurDestinationId = $operateurDestination['operateur_id'] ?? null;
         $fraisCommission = 0.0;
+
+        return [
+            'montant_base' => $montantBase,
+            'frais_retrait' => $fraisRetraitTheorique,
+            'montant_transfert' => $montantTransfert,
+            'frais_transfert' => $fraisTransfert,
+            'frais_commission' => $fraisCommission,
+            'operateur_destination_id' => $operateurDestinationId,
+            'total_debit' => $montantTransfert + $fraisTransfert + $fraisCommission,
+        ];
+    }
+    */
+
+    private function calculerDetailTransfert(float $montantBase, ?string $numeroDestinataire, array $typeTransfert, ?array $typeRetrait, bool $inclureFraisRetrait, ?int $operateurEmetteurId): array
+    {
+        $fraisRetraitTheorique = 0.0;
+
+        if ($inclureFraisRetrait && $typeRetrait) {
+            $baremeRetrait = $this->baremeFraisModel->trouverFrais($typeRetrait['id'], $montantBase);
+            $fraisRetraitTheorique = $baremeRetrait ? (float) $baremeRetrait['frais'] : 0.0;
+        }
+
+        $montantTransfert = $montantBase + $fraisRetraitTheorique;
+        $baremeTransfert = $this->baremeFraisModel->trouverFrais($typeTransfert['id'], $montantTransfert);
+        $fraisTransfert = $baremeTransfert ? (float) $baremeTransfert['frais'] : 0.0;
+
+        $operateurDestination = $this->operateurPrefixeModel->trouverOperateurParNumero($numeroDestinataire);
+        $operateurDestinationId = $operateurDestination ? (int)$operateurDestination['operateur_id'] : null;
+        
+        // Calcul de la commission inter-opérateur
+        $fraisCommission = 0.0;
+        
+        if ($operateurEmetteurId !== null && $operateurDestinationId !== null) {
+            // Si l'opérateur du destinataire est différent de celui de l'émetteur
+            if ($operateurEmetteurId !== $operateurDestinationId) {
+                // Recherche de la configuration correspondante dans la table
+                $config = $this->configurationCommissionModel->trouverConfiguration($operateurEmetteurId, $operateurDestinationId);
+                
+                if ($config) {
+                    $pourcentage = (float) $config['pourcentage_commission'];
+                    // Formule demandée : (frais_bareme * commission) / 100
+                    $fraisCommission = ($fraisTransfert * $pourcentage) / 100;
+                }
+            }
+        }
 
         return [
             'montant_base' => $montantBase,

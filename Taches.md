@@ -176,6 +176,9 @@
     - [ok] Securiser les url, on ne peut pas naviguer sans etre connecter
         - [ok] Creer AhthFilter.php pour verifier la connection
         - [ok] Securiser les routes
+
+# Mobile Money - Version 2
+
 **Funaki ETU004169**
 - [ok] Option : Inclure les frais de retrait lors de l'envoi (Frais cumulés)
     - [ok] Modifier la méthode `processTransfert()` pour récupérer l'état du switch d'inclusion des frais de retrait
@@ -196,3 +199,49 @@
     - [ok] Découper les numéros, valider l'existence de chaque compte
     - [ok] Exécuter la boucle de calcul (en appliquant la règle des frais cumulés ou standards par tranche individuelle) à l'intérieur d'un bloc `$db->transStart()`
     - [ok] Si le solde total requis pour l'ensemble des numéros dépasse le solde de l'expéditeur, effectuer un rollback complet
+
+**Coralie ETU004250**
+- [ok] Coté opérateur
+    - [ok] Configuration des préfixes valable pour les autres opérateurs (ex: 032 et 031, …)
+        - [ok] Creer/Mofifier tables/view:
+            - [ok] table `operateur`
+            - [ok] table `operateur_prefixe`
+            - [ok] table `historique_transactions`
+            - [ok] view `vue_historique_portefeuille_clients`
+        - [ok] Rearanger/Creer les models
+            - [ok] `OperateurPrefixeModel`
+            - [ok] `HistoriqueTransactionModel`
+        - [ok] Modifier la page `prefixes.php`
+            - [ok] Formulaire d'ajout de prefixe
+                - [ok] Ajouter champ pour choisir a quel operateur appartient le prefixe
+            - [ok] Tableau d'affichage des prefixes
+                - [ok] Tableau 1: liste des prefixes de mon operateur
+                - [ok] Tableau 2: liste des prefixes des autres operateurs
+
+    - [ok] Configuration % en plus de commissions pour les transferts vers les autres opérateurs 
+        - [ok] Creer tables:
+            - [ok] table `configuration_commissions`
+        - [ok] Creer les models:
+            - [ok] `ConfigurationCommissionModel`
+        - [ok] Creer page `commission.php`
+            - [ok] Afficher la liste des % de commission entre mon operateur et les autres operateurs
+            - [ok] Bouton `Modifier` et  `Supprimer` pour chaque % de commission
+            - [ok] Formulaire d'ajout d'un nouveau % de commission
+        - [ok] Ajouter dans menu de l'operateur le lien qui mene vers `commission.php`
+
+    - [ok] Sur la page “Situation gain via les différents frais” , séparer opérateur et autres opérateurs
+        - [ok] Mofifier view:
+            - [ok] view `vue_situation_gains`
+        - [ok] Creer fonction `obtenirGainsSepares()` pour recuperer le gains otenu par mon operateur et par les 
+        autres operateurs sur les `transferts` ou `retrait`
+        - [ok] Modifier la page `gains.php` pour afficher les gains séparés
+        - [ok] Ajouter un filtre par type d'operation (transfert/retrait)
+
+    - [ok] Situation des montants à envoyer à chaque opérateur
+        - [ok] Creer fonction `obtenirMontantsParOperateur()` pour recuperer le montant verser vers chaque operateur different de mon operateur
+        - [ok] Creer page `montant.php`
+            - [ok] Afficher la somme total cumuler des autres operateur
+            - [ok] Afficher dans un tableau le montant a envoyer pour chaque operateur different de mon operateur
+
+
+- [ok] Corriger la fonction qui insert un nouvel historique_transaction

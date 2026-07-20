@@ -26,7 +26,7 @@ $pager = $pager ?? '';
                 <i class="bi bi-building"></i>
             </div>
             <div class="mm-stat-label">Gains internes</div>
-            <div class="mm-stat-value positive"><?= number_format($stats['interne']['total'], 0, ',', ' ') ?> Ar</div>
+            <div class="mm-stat-value positive"><?= $stats['interne']['total'] ?> Ar</div>
             <div class="mm-stat-subtitle">Mon opérateur</div>
         </div>
     </div>
@@ -36,7 +36,7 @@ $pager = $pager ?? '';
                 <i class="bi bi-globe"></i>
             </div>
             <div class="mm-stat-label">Gains externes</div>
-            <div class="mm-stat-value accent"><?= number_format($stats['externe']['total'], 0, ',', ' ') ?> Ar</div>
+            <div class="mm-stat-value accent"><?= $stats['externe']['total'] ?> Ar</div>
             <div class="mm-stat-subtitle">Commissions</div>
         </div>
     </div>
@@ -46,7 +46,7 @@ $pager = $pager ?? '';
                 <i class="bi bi-cash-stack"></i>
             </div>
             <div class="mm-stat-label">Total cumulé</div>
-            <div class="mm-stat-value"><?= number_format($stats['total_cumule'], 0, ',', ' ') ?> Ar</div>
+            <div class="mm-stat-value"><?= $stats['total_cumule'] ?> Ar</div>
             <div class="mm-stat-subtitle">Revenus totaux</div>
         </div>
     </div>
@@ -63,13 +63,13 @@ $pager = $pager ?? '';
                     <div class="col-6">
                         <div class="mm-stat-card-sm p-2 border rounded bg-light text-center">
                             <div class="mm-stat-label-sm text-muted small">Retrait</div>
-                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= number_format($stats['interne']['retrait'], 0, ',', ' ') ?> Ar</div>
+                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= $stats['interne']['retrait'] ?> Ar</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mm-stat-card-sm p-2 border rounded bg-light text-center">
                             <div class="mm-stat-label-sm text-muted small">Transfert</div>
-                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= number_format($stats['interne']['transfert'], 0, ',', ' ') ?> Ar</div>
+                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= $stats['interne']['transfert'] ?> Ar</div>
                         </div>
                     </div>
                 </div>
@@ -89,13 +89,13 @@ $pager = $pager ?? '';
                     <div class="col-6">
                         <div class="mm-stat-card-sm p-2 border rounded bg-light text-center">
                             <div class="mm-stat-label-sm text-muted small">Transfert</div>
-                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= number_format($stats['externe']['transfert'], 0, ',', ' ') ?> Ar</div>
+                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= $stats['externe']['transfert'] ?> Ar</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mm-stat-card-sm p-2 border rounded bg-light text-center">
                             <div class="mm-stat-label-sm text-muted small">Total commissions</div>
-                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= number_format($stats['externe']['total'], 0, ',', ' ') ?> Ar</div>
+                            <div class="mm-stat-value-sm fw-bold text-dark mt-1"><?= $stats['externe']['total'] ?> Ar</div>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@ $pager = $pager ?? '';
                     <?php foreach ($stats['externe']['details'] as $detail): ?>
                         <div class="mm-detail-item d-flex justify-content-between small py-1 border-bottom border-light">
                             <span class="text-secondary"><?= esc($detail['operateur']) ?></span>
-                            <span class="fw-bold text-dark"><?= number_format($detail['montant'], 0, ',', ' ') ?> Ar</span>
+                            <span class="fw-bold text-dark"><?= $detail['montant'] ?> Ar</span>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -161,10 +161,10 @@ $pager = $pager ?? '';
                                     <?= esc($transaction['type_nom']) ?>
                                 </span>
                             </td>
-                            <td><?= number_format($transaction['montant'], 0, ',', ' ') ?> Ar</td>
-                            <td class="text-end"><?= number_format($transaction['frais_bareme'] ?? 0, 0, ',', ' ') ?> Ar</td>
-                            <td class="text-end"><?= number_format($transaction['frais_commission'] ?? 0, 0, ',', ' ') ?> Ar</td>
-                            <td class="text-end"><?= number_format($transaction['frais_percus'] ?? 0, 0, ',', ' ') ?> Ar</td>
+                            <td><?= number_format($transaction['montant'], 2, ',', ' ') ?> Ar</td>
+                            <td class="text-end"><?= number_format($transaction['frais_bareme'] ?? 0, 2, ',', ' ') ?> Ar</td>
+                            <td class="text-end"><?= number_format($transaction['frais_commission'] ?? 0, 2, ',', ' ') ?> Ar</td>
+                            <td class="text-end"><?= number_format($transaction['frais_percus'] ?? 0, 2, ',', ' ') ?> Ar</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
