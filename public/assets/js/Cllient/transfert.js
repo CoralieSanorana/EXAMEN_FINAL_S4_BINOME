@@ -1,25 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const numeroDestinataire = document.getElementById('numeroDestinataire');
-    const destinataireInfo = document.getElementById('destinataireInfo');
-    const destinataireNom = document.getElementById('destinataireNom');
-    const destinataireError = document.getElementById('destinataireError');
-    const destinataireId = document.getElementById('destinataireId');
+    const numeroEmetteur = document.getElementById('numeroEmetteur');
+    const numerosDestinataires = document.getElementById('numerosDestinataires');
+    const destinatairesInfo = document.getElementById('destinatairesInfo');
+    const destinatairesResume = document.getElementById('destinatairesResume');
+    const destinatairesPreview = document.getElementById('destinatairesPreview');
+    const destinatairesError = document.getElementById('destinatairesError');
     const montantInput = document.getElementById('montantInput');
     const soldeDisponible = document.getElementById('soldeDisponible');
     const montantError = document.getElementById('montantError');
-    const soldeActuel = document.getElementById('soldeActuel');
+    const nombreDestinataires = document.getElementById('nombreDestinataires');
+    const montantBase = document.getElementById('montantBase');
+    const partParDestinataire = document.getElementById('partParDestinataire');
+    const fraisRetrait = document.getElementById('fraisRetrait');
     const montantTransfert = document.getElementById('montantTransfert');
     const fraisApplicables = document.getElementById('fraisApplicables');
+    const totalDebit = document.getElementById('totalDebit');
     const nouveauSolde = document.getElementById('nouveauSolde');
+    const inclureFraisRetrait = document.getElementById('inclureFraisRetrait');
     const submitBtn = document.getElementById('submitBtn');
     const transfertForm = document.getElementById('transfertForm');
 
-    // Parse solde from text (remove spaces and convert to number)
-    let solde = parseFloat(soldeDisponible.textContent.replace(/\s/g, ''));
+    let solde = parseFloat(soldeDisponible.textContent.replace(/\s/g, '').replace(',', '.'));
     if (isNaN(solde)) solde = 0;
 
-    // Barème des frais pour transfert (basé sur base.sql)
-    const baremeFrais = [
+    const emetteurNormalise = normaliserNumero(numeroEmetteur.value);
+
+    const baremeRetrait = [
         { min: 100, max: 1000, frais: 50 },
         { min: 1001, max: 5000, frais: 50 },
         { min: 5001, max: 10000, frais: 100 },
@@ -32,173 +38,240 @@ document.addEventListener('DOMContentLoaded', function() {
         { min: 1000001, max: 2000000, frais: 3000 }
     ];
 
-    // Function to calculate fees based on amount
-    function calculerFrais(montant) {
-        for (const tranche of baremeFrais) {
+    const baremeTransfert = [
+        { min: 100, max: 1000, frais: 50 },
+        { min: 1001, max: 5000, frais: 50 },
+        { min: 5001, max: 10000, frais: 100 },
+        { min: 10011, max: 25000, frais: 200 },
+        { min: 25001, max: 50000, frais: 400 },
+        { min: 50011, max: 100000, frais: 800 },
+        { min: 100001, max: 250000, frais: 1500 },
+        { min: 250001, max: 500000, frais: 1500 },
+        { min: 500001, max: 1000000, frais: 2500 },
+        { min: 1000001, max: 2000000, frais: 3000 }
+    ];
+
+    function normaliserNumero(numero) {
+        return String(numero || '').replace(/[\s\-.]/g, '').trim();
+    }
+
+    function formatNombre(nombre) {
+        const valeur = Number(nombre) || 0;
+        const avecDecimales = Math.abs(valeur - Math.round(valeur)) > 0.009;
+
+        return valeur.toLocaleString('fr-FR', {
+            minimumFractionDigits: avecDecimales ? 2 : 0,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function calculerFrais(montant, bareme) {
+        if (!montant || montant <= 0) {
+            return 0;
+        }
+
+        for (const tranche of bareme) {
             if (montant >= tranche.min && montant <= tranche.max) {
                 return tranche.frais;
             }
         }
-        // Default fee for amounts above the highest bracket
-        return 3000;
+
+        return bareme.length ? bareme[bareme.length - 1].frais : 0;
     }
 
-    // Function to format number with spaces
-    function formatNombre(nombre) {
-        return nombre.toLocaleString('fr-FR');
+    function extraireNumeros() {
+        return (numerosDestinataires.value || '')
+            .split(/[\n,;]+/)
+            .map(normaliserNumero)
+            .filter(Boolean);
     }
 
-    // Debounce function for AJAX
-    let debounceTimer;
-    function debounce(func, delay) {
-        return function(...args) {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => func.apply(this, args), delay);
+    function analyserDestinataires() {
+        const numeros = extraireNumeros();
+        const erreurs = [];
+        const doublons = [];
+        const invalides = [];
+        const soiMeme = [];
+        const compteParNumero = {};
+
+        numeros.forEach(numero => {
+            compteParNumero[numero] = (compteParNumero[numero] || 0) + 1;
+        });
+
+        Object.entries(compteParNumero).forEach(([numero, total]) => {
+            if (total > 1) {
+                doublons.push(numero);
+            }
+        });
+
+        const uniques = [...new Set(numeros)];
+        const regexNumero = /^[0-9]{8,10}$/;
+
+        uniques.forEach(numero => {
+            if (!regexNumero.test(numero)) {
+                invalides.push(numero);
+            }
+
+            if (numero === emetteurNormalise) {
+                soiMeme.push(numero);
+            }
+        });
+
+        if (doublons.length) {
+            erreurs.push(`Numéros en doublon : ${doublons.join(', ')}`);
+        }
+
+        if (invalides.length) {
+            erreurs.push(`Format invalide : ${invalides.join(', ')}`);
+        }
+
+        if (soiMeme.length) {
+            erreurs.push(`Vous ne pouvez pas vous transférer à vous-même : ${soiMeme.join(', ')}`);
+        }
+
+        return {
+            numeros: uniques,
+            erreurs
         };
     }
 
-    // Function to search for recipient
-    const rechercherDestinataire = debounce(function() {
-        const numero = numeroDestinataire.value.replace(/\s/g, '');
-        
-        if (numero.length < 8) {
-            destinataireInfo.style.display = 'none';
-            destinataireError.style.display = 'none';
-            destinataireId.value = '';
-            submitBtn.disabled = true;
+    function calculerResume(montant, totalDestinataires, inclureRetrait) {
+        if (!montant || montant <= 0 || totalDestinataires <= 0) {
+            return null;
+        }
+
+        const partBase = montant / totalDestinataires;
+
+        if (partBase < 100) {
+            return {
+                erreur: 'La part par destinataire doit être au moins de 100 Ar'
+            };
+        }
+
+        const fraisRetraitUnitaire = inclureRetrait ? calculerFrais(partBase, baremeRetrait) : 0;
+        const montantTransfertUnitaire = partBase + fraisRetraitUnitaire;
+        const fraisTransfertUnitaire = calculerFrais(montantTransfertUnitaire, baremeTransfert);
+        const totalDebitUnitaire = montantTransfertUnitaire + fraisTransfertUnitaire;
+
+        return {
+            partBase,
+            fraisRetraitTotal: fraisRetraitUnitaire * totalDestinataires,
+            montantTransfertTotal: montantTransfertUnitaire * totalDestinataires,
+            fraisTransfertTotal: fraisTransfertUnitaire * totalDestinataires,
+            totalDebit: totalDebitUnitaire * totalDestinataires,
+            nouveauSolde: solde - (totalDebitUnitaire * totalDestinataires)
+        };
+    }
+
+    function reinitialiserResume() {
+        nombreDestinataires.textContent = '0';
+        montantBase.textContent = '0 Ar';
+        partParDestinataire.textContent = '0 Ar';
+        fraisRetrait.textContent = '0 Ar';
+        montantTransfert.textContent = '0 Ar';
+        fraisApplicables.textContent = '0 Ar';
+        totalDebit.textContent = '0 Ar';
+        nouveauSolde.textContent = formatNombre(solde) + ' Ar';
+        nouveauSolde.style.color = '#5c677d';
+    }
+
+    function mettreAJourInfosDestinataires(analyse) {
+        destinatairesInfo.style.display = 'none';
+        destinatairesError.style.display = 'none';
+
+        if (analyse.erreurs.length) {
+            destinatairesError.innerHTML = analyse.erreurs.join('<br>');
+            destinatairesError.style.display = 'block';
             return;
         }
 
-        destinataireInfo.style.display = 'none';
-        destinataireError.style.display = 'none';
-        destinataireError.textContent = 'Recherche en cours...';
-        destinataireError.style.display = 'block';
-        submitBtn.disabled = true;
+        if (!analyse.numeros.length) {
+            return;
+        }
 
-        fetch(`/client/rechercherClient?numero=${numero}`)
-            .then(response => response.json())
-            .then(data => {
-                destinataireError.style.display = 'none';
-                
-                if (data.success) {
-                    destinataireNom.textContent = `${data.client.prenom} ${data.client.nom} (${data.client.numero_telephone})`;
-                    destinataireInfo.style.display = 'block';
-                    destinataireId.value = data.client.id;
-                    
-                    // Enable submit if amount is valid
-                    validerMontant(parseFloat(montantInput.value));
-                } else {
-                    destinataireError.textContent = data.message || 'Client introuvable';
-                    destinataireError.style.display = 'block';
-                    destinataireInfo.style.display = 'none';
-                    destinataireId.value = '';
-                    submitBtn.disabled = true;
-                }
-            })
-            .catch(error => {
-                destinataireError.textContent = 'Erreur lors de la recherche';
-                destinataireError.style.display = 'block';
-                destinataireInfo.style.display = 'none';
-                destinataireId.value = '';
-                submitBtn.disabled = true;
-            });
-    }, 500);
+        destinatairesResume.textContent = `${analyse.numeros.length} destinataire(s) prêt(s) à recevoir le transfert.`;
+        destinatairesPreview.textContent = analyse.numeros.join(', ');
+        destinatairesInfo.style.display = 'block';
+    }
 
-    // Function to validate amount
-    function validerMontant(montant) {
+    function mettreAJourResume() {
+        const analyse = analyserDestinataires();
+        const montant = parseFloat(montantInput.value);
+        const inclureRetrait = inclureFraisRetrait.checked;
+
+        mettreAJourInfosDestinataires(analyse);
         montantError.style.display = 'none';
-        
-        if (!destinataireId.value) {
+
+        if (analyse.erreurs.length || !analyse.numeros.length) {
+            reinitialiserResume();
             submitBtn.disabled = true;
             return false;
         }
 
-        if (!montant || montant <= 0) {
+        const resume = calculerResume(montant, analyse.numeros.length, inclureRetrait);
+
+        if (!resume) {
+            nombreDestinataires.textContent = String(analyse.numeros.length);
+            montantBase.textContent = formatNombre(montant || 0) + ' Ar';
+            partParDestinataire.textContent = '0 Ar';
+            fraisRetrait.textContent = '0 Ar';
+            montantTransfert.textContent = '0 Ar';
+            fraisApplicables.textContent = '0 Ar';
+            totalDebit.textContent = '0 Ar';
+            nouveauSolde.textContent = formatNombre(solde) + ' Ar';
+            nouveauSolde.style.color = '#5c677d';
             submitBtn.disabled = true;
             return false;
         }
 
-        if (montant < 100) {
-            montantError.textContent = 'Le montant minimum est de 100 Ar';
+        nombreDestinataires.textContent = String(analyse.numeros.length);
+        montantBase.textContent = formatNombre(montant) + ' Ar';
+        partParDestinataire.textContent = formatNombre(resume.partBase) + ' Ar';
+        fraisRetrait.textContent = formatNombre(resume.fraisRetraitTotal) + ' Ar';
+        montantTransfert.textContent = formatNombre(resume.montantTransfertTotal) + ' Ar';
+        fraisApplicables.textContent = formatNombre(resume.fraisTransfertTotal) + ' Ar';
+        totalDebit.textContent = formatNombre(resume.totalDebit) + ' Ar';
+        nouveauSolde.textContent = formatNombre(resume.nouveauSolde) + ' Ar';
+
+        if (resume.erreur) {
+            montantError.textContent = resume.erreur;
             montantError.style.display = 'block';
             submitBtn.disabled = true;
             return false;
         }
 
-        const frais = calculerFrais(montant);
-        const totalDebit = montant + frais;
-
-        if (totalDebit > solde) {
-            montantError.textContent = `Solde insuffisant (incluant les frais de ${formatNombre(frais)} Ar)`;
+        if (resume.totalDebit > solde) {
+            montantError.textContent = `Solde insuffisant (débit total estimé : ${formatNombre(resume.totalDebit)} Ar)`;
             montantError.style.display = 'block';
             submitBtn.disabled = true;
             return false;
+        }
+
+        if (resume.nouveauSolde < 1000) {
+            nouveauSolde.style.color = '#dc3545';
+        } else if (resume.nouveauSolde < 5000) {
+            nouveauSolde.style.color = '#ffc107';
+        } else {
+            nouveauSolde.style.color = '#5c677d';
         }
 
         submitBtn.disabled = false;
         return true;
     }
 
-    // Function to update summary
-    function mettreAJourResume(montant) {
-        if (!montant || montant <= 0) {
-            montantTransfert.textContent = '0 Ar';
-            fraisApplicables.textContent = '0 Ar';
-            nouveauSolde.textContent = formatNombre(solde) + ' Ar';
-            nouveauSolde.style.color = '#5c677d'; // Default color
-            return;
-        }
+    numerosDestinataires.addEventListener('input', mettreAJourResume);
+    montantInput.addEventListener('input', mettreAJourResume);
+    inclureFraisRetrait.addEventListener('change', mettreAJourResume);
 
-        const frais = calculerFrais(montant);
-        const totalDebit = montant + frais;
-        const nouveauSoldeCalcule = solde - totalDebit;
-
-        montantTransfert.textContent = formatNombre(montant) + ' Ar';
-        fraisApplicables.textContent = formatNombre(frais) + ' Ar';
-        nouveauSolde.textContent = formatNombre(nouveauSoldeCalcule) + ' Ar';
-
-        // Change color if balance is low
-        if (nouveauSoldeCalcule < 1000) {
-            nouveauSolde.style.color = '#dc3545'; // Red
-        } else if (nouveauSoldeCalcule < 5000) {
-            nouveauSolde.style.color = '#ffc107'; // Yellow
-        } else {
-            nouveauSolde.style.color = '#5c677d'; // Default
-        }
-    }
-
-    // Event listener for recipient number input
-    numeroDestinataire.addEventListener('input', rechercherDestinataire);
-
-    // Event listener for amount input
-    montantInput.addEventListener('input', function() {
-        const montant = parseFloat(this.value);
-        
-        if (isNaN(montant) || montant <= 0) {
-            montantError.style.display = 'none';
-            submitBtn.disabled = !destinataireId.value;
-            mettreAJourResume(0);
-            return;
-        }
-
-        validerMontant(montant);
-        mettreAJourResume(montant);
-    });
-
-    // Form submission validation
     transfertForm.addEventListener('submit', function(e) {
-        const montant = parseFloat(montantInput.value);
-        
-        if (!validerMontant(montant) || !destinataireId.value) {
+        if (!mettreAJourResume()) {
             e.preventDefault();
             return;
         }
 
-        // Disable button to prevent double submission
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Traitement en cours...';
     });
 
-    // Initialize
-    mettreAJourResume(0);
+    mettreAJourResume();
 });

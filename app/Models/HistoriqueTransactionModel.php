@@ -10,14 +10,15 @@ class HistoriqueTransactionModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'compte_destination_id', 'montant', 'frais_appliques'];
+    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'compte_destination_id', 'montant', 'frais_appliques', 'reference_groupe'];
 
     protected $validationRules      = [
         'type_operation_id'     => 'required|integer',
         'compte_source_id'      => 'required|integer',
         'compte_destination_id' => 'permit_empty|integer',
         'montant'               => 'required|numeric|greater_than[0]',
-        'frais_appliques'       => 'required|numeric|greater_than_equal_to[0]'
+        'frais_appliques'       => 'required|numeric|greater_than_equal_to[0]',
+        'reference_groupe'      => 'permit_empty|max_length[100]'
     ];
     protected $skipValidation       = false;
 
