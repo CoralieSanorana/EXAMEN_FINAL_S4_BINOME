@@ -2,9 +2,9 @@
 
 <?php
 $stats = $stats ?? [
-    'gains_retrait' => '0',
-    'gains_transfert' => '0',
-    'total_cumule' => '0',
+    'interne' => ['total' => 0, 'retrait' => 0, 'transfert' => 0],
+    'externe' => ['total' => 0, 'transfert' => 0, 'details' => []],
+    'total_cumule' => 0,
 ];
 $filter = $filter ?? 'all';
 $transactions = $transactions ?? [];
@@ -13,41 +13,47 @@ $pager = $pager ?? '';
 
 <?= $this->section('content') ?>
 
-<div class="mm-page-header">
-    <h1>Situation des gains</h1>
-    <p>Vue d'ensemble des revenus générés par les frais de barème et les commissions inter-opérateurs.</p>
+<div class="mm-page-header mb-4">
+    <h1 class="h2 fw-bold text-dark">Situation des gains</h1>
+    <p class="text-muted">Vue d'ensemble des revenus générés par les frais de barème et les commissions inter-opérateurs.</p>
 </div>
 
-<!-- CONSERVATION STRICTE DES COULEURS ET DEGRADES D'ORIGINE -->
+<!-- Cartes Statistiques Principales -->
 <div class="row g-3 mb-4">
     <div class="col-md-4">
-        <div class="mm-stat-card mm-stat-card-gradient-green">
-            <div class="mm-stat-icon">
-                <i class="bi bi-building"></i>
+        <div class="mm-stat-card mm-stat-card-gradient-green p-3 h-100 rounded-3 shadow-sm">
+            <div class="d-flex align-items-center mb-2">
+                <div class="mm-stat-icon me-2 px-2 py-1 bg-white bg-opacity-25 rounded text-white">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="mm-stat-label text-white-50 fw-semibold">Gains internes</div>
             </div>
-            <div class="mm-stat-label">Gains internes</div>
-            <div class="mm-stat-value positive"><?= number_format($stats['interne']['total'], 0, ',', ' ') ?> Ar</div>
-            <div class="mm-stat-subtitle">Mon opérateur</div>
+            <div class="mm-stat-value positive text-white h3 fw-bold mb-1"><?= number_format($stats['interne']['total'], 0, ',', ' ') ?> Ar</div>
+            <div class="mm-stat-subtitle text-white-50 small">Mon opérateur</div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="mm-stat-card mm-stat-card-gradient-purple">
-            <div class="mm-stat-icon">
-                <i class="bi bi-globe"></i>
+        <div class="mm-stat-card mm-stat-card-gradient-purple p-3 h-100 rounded-3 shadow-sm">
+            <div class="d-flex align-items-center mb-2">
+                <div class="mm-stat-icon me-2 px-2 py-1 bg-white bg-opacity-25 rounded text-white">
+                    <i class="bi bi-globe"></i>
+                </div>
+                <div class="mm-stat-label text-white-50 fw-semibold">Gains externes</div>
             </div>
-            <div class="mm-stat-label">Gains externes</div>
-            <div class="mm-stat-value accent"><?= number_format($stats['externe']['total'], 0, ',', ' ') ?> Ar</div>
-            <div class="mm-stat-subtitle">Commissions</div>
+            <div class="mm-stat-value accent text-white h3 fw-bold mb-1"><?= number_format($stats['externe']['total'], 0, ',', ' ') ?> Ar</div>
+            <div class="mm-stat-subtitle text-white-50 small">Commissions</div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="mm-stat-card mm-stat-card-gradient-blue">
-            <div class="mm-stat-icon">
-                <i class="bi bi-cash-stack"></i>
+        <div class="mm-stat-card mm-stat-card-gradient-blue p-3 h-100 rounded-3 shadow-sm">
+            <div class="d-flex align-items-center mb-2">
+                <div class="mm-stat-icon me-2 px-2 py-1 bg-white bg-opacity-25 rounded text-white">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+                <div class="mm-stat-label text-white-50 fw-semibold">Total cumulé</div>
             </div>
-            <div class="mm-stat-label">Total cumulé</div>
-            <div class="mm-stat-value"><?= number_format($stats['total_cumule'], 0, ',', ' ') ?> Ar</div>
-            <div class="mm-stat-subtitle">Revenus totaux</div>
+            <div class="mm-stat-value text-white h3 fw-bold mb-1"><?= number_format($stats['total_cumule'], 0, ',', ' ') ?> Ar</div>
+            <div class="mm-stat-subtitle text-white-50 small">Revenus totaux</div>
         </div>
     </div>
 </div>
@@ -120,22 +126,22 @@ $pager = $pager ?? '';
     </div>
 </div>
 
-<!-- SECTION TABLEAU AVEC CORRECTION INTEGRALE DE LA PAGINATION -->
-<div class="mm-card">
+<!-- Tableau principal -->
+<div class="mm-card bg-white p-3 rounded-3 shadow-sm border">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="mm-card-title mb-0"><i class="bi bi-cash-stack"></i> Détail des frais perçus</div>
-        <div class="d-flex gap-2">
+        <div class="mm-card-title mb-0 fw-bold text-dark"><i class="bi bi-cash-stack me-2"></i>Détail des frais perçus</div>
+        <div>
             <select class="form-select form-select-sm" style="width:auto;" onchange="window.location.href='<?= base_url('operateur/gains') ?>?filter=' + this.value">
-                <option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>Tous</option>
-                <option value="RETRAIT" <?= $filter === 'RETRAIT' ? 'selected' : '' ?>>Retrait</option>
-                <option value="TRANSFERT" <?= $filter === 'TRANSFERT' ? 'selected' : '' ?>>Transfert</option>
+                <option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>Toutes les opérations</option>
+                <option value="RETRAIT" <?= $filter === 'RETRAIT' ? 'selected' : '' ?>>Retrait uniquement</option>
+                <option value="TRANSFERT" <?= $filter === 'TRANSFERT' ? 'selected' : '' ?>>Transfert uniquement</option>
             </select>
         </div>
     </div>
 
     <div class="table-responsive">
-        <table class="table mm-table">
-            <thead>
+        <table class="table mm-table align-middle">
+            <thead class="table-light">
                 <tr>
                     <th>Date</th>
                     <th>Numéro client</th>
@@ -152,74 +158,37 @@ $pager = $pager ?? '';
                 <?php if (!empty($transactions)): ?>
                     <?php foreach ($transactions as $transaction): ?>
                         <tr>
-                            <td><?= date('d/m/Y H:i', strtotime($transaction['effectue_le'])) ?></td>
-                            <td><?= esc($transaction['compte_source_numero'] ?? 'N/A') ?></td>
-                            <td><?= esc($transaction['numero_destinataire_affiche'] ?? '-') ?></td>
-                            <td><?= esc($transaction['reseau_concerne'] ?? 'Non défini') ?></td>
+                            <td class="small text-muted"><?= date('d/m/Y H:i', strtotime($transaction['effectue_le'])) ?></td>
+                            <td class="font-monospace fw-semibold"><?= esc($transaction['compte_source_numero'] ?? 'N/A') ?></td>
+                            <td class="font-monospace"><?= esc($transaction['numero_destinataire_affiche'] ?? '-') ?></td>
+                            <td><span class="text-secondary small"><?= esc($transaction['reseau_concerne'] ?? 'Non défini') ?></span></td>
                             <td>
-                                <span class="badge badge-mm <?= $transaction['type_code'] === 'RETRAIT' ? 'badge-retrait' : 'badge-transfert' ?>">
+                                <span class="badge rounded-pill p-2 <?= $transaction['type_code'] === 'RETRAIT' ? 'bg-success text-white' : 'bg-primary text-white' ?>">
                                     <?= esc($transaction['type_nom']) ?>
                                 </span>
                             </td>
-                            <td><?= number_format($transaction['montant'], 0, ',', ' ') ?> Ar</td>
-                            <td class="text-end"><?= number_format($transaction['frais_bareme'] ?? 0, 0, ',', ' ') ?> Ar</td>
-                            <td class="text-end"><?= number_format($transaction['frais_commission'] ?? 0, 0, ',', ' ') ?> Ar</td>
-                            <td class="text-end"><?= number_format($transaction['frais_percus'] ?? 0, 0, ',', ' ') ?> Ar</td>
+                            <td class="fw-semibold"><?= number_format($transaction['montant'], 0, ',', ' ') ?> Ar</td>
+                            <td class="text-end text-success font-monospace"><?= number_format($transaction['frais_bareme'] ?? 0, 0, ',', ' ') ?> Ar</td>
+                            <td class="text-end text-purple font-monospace" style="color: var(--bs-purple, #6f42c1);"><?= number_format($transaction['frais_commission'] ?? 0, 0, ',', ' ') ?> Ar</td>
+                            <td class="text-end fw-bold text-dark font-monospace"><?= number_format($transaction['frais_percus'] ?? 0, 0, ',', ' ') ?> Ar</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="9" class="text-center">Aucune transaction trouvée</td>
+                        <td colspan="9" class="text-center py-4 text-muted">Aucune transaction enregistrée sous ce filtre.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 
-    <!-- RESTRUCTURATION COMPLÈTE ET CENTRAGE DE LA PAGINATION POUR SUPPRIMER LE RENDU INESTHÉTIQUE -->
+    <!-- Alignement Centré et Symétrique de la Pagination -->
     <?php if (!empty($pager)): ?>
-        <div class="d-flex justify-content-center align-items-center mt-4 pt-3 border-top w-100 pagination-container-fixed">
-            <style>
-                /* Injection de styles ciblés pour neutraliser les puces ou blocs natifs bruts et forcer la symétrie Bootstrap */
-                .pagination-container-fixed ul {
-                    display: flex !important;
-                    padding-left: 0 !important;
-                    list-style: none !important;
-                    margin: 0 !important;
-                    gap: 5px;
-                }
-                .pagination-container-fixed ul li {
-                    display: inline-block !important;
-                }
-                .pagination-container-fixed ul li a, 
-                .pagination-container-fixed ul li span {
-                    position: relative;
-                    display: block;
-                    padding: 0.5rem 0.75rem;
-                    color: #6f42c1; /* Rappel harmonieux de ta couleur Accent/Purple */
-                    background-color: #fff;
-                    border: 1px solid #dee2e6;
-                    text-decoration: none;
-                    border-radius: 4px;
-                    transition: all 0.2s ease-in-out;
-                }
-                .pagination-container-fixed ul li.active span,
-                .pagination-container-fixed ul li a:hover {
-                    z-index: 3;
-                    color: #fff;
-                    background-color: #6f42c1;
-                    border-color: #6f42c1;
-                }
-                .pagination-container-fixed ul li.disabled span {
-                    color: #6c757d;
-                    pointer-events: none;
-                    background-color: #fff;
-                    border-color: #dee2e6;
-                    opacity: 0.6;
-                }
-            </style>
-            <?= $pager ?>
-        </div>
+        <nav class="d-flex justify-content-center align-items-center mt-4 pt-2 border-top w-100">
+            <div class="pagination-clean-wrapper">
+                <?= $pager ?>
+            </div>
+        </nav>
     <?php endif; ?>
 </div>
 
