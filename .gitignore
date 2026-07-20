@@ -1,5 +1,0 @@
-writable/debugbar/*
-writable/session/*
-writable/MobileMoney.db
-.env
-*.log
