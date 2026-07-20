@@ -28,7 +28,7 @@ class Operateur extends BaseController
             session()->set('operateur_name', $operateur['username']);
             session()->set('operateur_email', $operateur['email']);
             session()->set('connecter', true);
-            return redirect()->to('/operateur/prefixes');
+            return redirect()->to('/operateur/gains');
         }
 
         return redirect()->to('/operateur/login')->with('error', 'Email ou mot de passe incorrect');
