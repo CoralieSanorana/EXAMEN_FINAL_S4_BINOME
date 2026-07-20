@@ -14,6 +14,8 @@ $routes->get('/client/retrait', 'Client::retrait');
 $routes->get('/client/solde', 'Client::solde');
 $routes->get('/client/transfert', 'Client::transfert');
 
+$routes->get('/operateur/login', 'Operateur::login');
+$routes->post('/operateur/login', 'Operateur::authentificate');
 $routes->get('/operateur/comptes', 'Operateur::comptes');
 $routes->get('/operateur/gains', 'Operateur::gains');
 $routes->get('/operateur/operations', 'Operateur::operations');

@@ -36,6 +36,11 @@
 
 **Funaki ETU004169**
 - [] Coté Opérateur (Back-office)
+    - [] Login operateur
+        - [] Formulaire de login avec champs:
+            - Nom d'utilisateur
+            - Mot de passe
+            - Bouton "Se connecter"
     - [] Interface de configuration des préfixes valides de l'opérateur
     - [] Interface de gestion et modification du barème de frais par tranche de montant
     - [] Page de situation des gains générés via les frais (retraits et transferts)
