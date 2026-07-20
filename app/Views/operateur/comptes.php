@@ -52,7 +52,7 @@
                 <?php foreach ($comptes as $compte): ?>
                     <tr>
                         <td><strong><?= $compte['numero_telephone'] ?></strong></td>
-                        <td>Opérateur</td>
+                        <td><?= $compte['nom'] ?> <?= $compte['prenom'] ?></td>
                         <td><?= date('d/m/Y', strtotime($compte['cree_le'] ?? 'now')) ?></td>
                         <td class="text-end"><?= number_format($compte['solde'], 0, ',', ' ') ?> Ar</td>
                         <td class="text-end">
