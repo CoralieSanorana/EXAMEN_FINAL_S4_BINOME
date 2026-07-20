@@ -10,7 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Client::index');
 
 // Client routes - grouped and secured
-$routes->group('client', ['filter' => 'nocache'], function($routes) {
+$routes->group('client', function($routes) {
     // Public routes (login/logout)
     $routes->get('login', 'Client::login');
     $routes->post('authenticate', 'Client::authenticate');
