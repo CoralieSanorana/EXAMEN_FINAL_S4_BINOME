@@ -172,8 +172,7 @@
         - [ok] sidebar_client.php: added "Mon profil" link
 
 **Coralie ETU004250**
-- [] Validations et Logique Métier
-    - [] Vérification de la validité du préfixe du numéro au login
-    - [] Application dynamique des frais selon la tranche du montant saisi (retrait/transfert)
-    - [] Vérification du solde suffisant avant d'autoriser un retrait ou un transfert
-    - [] Mise à jour du fichier Taches.md à chaque livraison intermédiaire
+- [] Securite
+    - [] Securiser les url, on ne peut pas naviguer sans etre connecter
+        - [] Creer AhthFilter.php pour verifier la connection
+        - [] Securiser les routes

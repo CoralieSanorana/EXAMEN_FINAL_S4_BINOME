@@ -27,7 +27,7 @@ class Operateur extends BaseController
         if ($operateur && $password==$operateur['mot_de_passe']) {
             session()->set('operateur_name', $operateur['username']);
             session()->set('operateur_email', $operateur['email']);
-            session()->set('connecter', true);
+            session()->set('logged_in', true);
             return redirect()->to('/operateur/gains');
         }
 
@@ -107,13 +107,19 @@ class Operateur extends BaseController
         $pager = \Config\Services::pager();
         $perPage = 10;
         $page = $this->request->getVar('page') ?? 1;
+        $filter = $this->request->getVar('filter') ?? 'all';
         
-        $transactions = $historiqueModel->select('historique_transactions.*, types_operations.code as type_code, types_operations.nom as type_nom, cs.numero_telephone as compte_source_numero')
-                                       ->join('types_operations', 'types_operations.id = historique_transactions.type_operation_id')
-                                       ->join('comptes_clients cs', 'cs.id = historique_transactions.compte_source_id')
-                                       ->whereIn('types_operations.code', ['RETRAIT', 'TRANSFERT'])
-                                       ->orderBy('historique_transactions.effectue_le', 'DESC')
-                                       ->paginate($perPage, 'default', $page);
+        $query = $historiqueModel->select('historique_transactions.*, types_operations.code as type_code, types_operations.nom as type_nom, cs.numero_telephone as compte_source_numero')
+                                 ->join('types_operations', 'types_operations.id = historique_transactions.type_operation_id')
+                                 ->join('comptes_clients cs', 'cs.id = historique_transactions.compte_source_id')
+                                 ->whereIn('types_operations.code', ['RETRAIT', 'TRANSFERT']);
+        
+        if ($filter !== 'all') {
+            $query->where('types_operations.code', $filter);
+        }
+        
+        $transactions = $query->orderBy('historique_transactions.effectue_le', 'DESC')
+                            ->paginate($perPage, 'default', $page);
         $pagerLinks = $historiqueModel->pager->links();
         
         $data = [
@@ -123,7 +129,8 @@ class Operateur extends BaseController
                 'total_cumule' => number_format($totalCumule, 0, ',', ' ')
             ],
             'transactions' => $transactions,
-            'pager' => $pagerLinks
+            'pager' => $pagerLinks,
+            'filter' => $filter
         ];
         
         return view('operateur/gains', $data);
