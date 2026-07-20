@@ -5,16 +5,35 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
 
-$routes->get('/client/login', 'Client::login');
-$routes->get('/client/depot', 'Client::depot');
-$routes->get('/client/historique', 'Client::historique');
-$routes->get('/client/retrait', 'Client::retrait');
-$routes->get('/client/solde', 'Client::solde');
-$routes->get('/client/transfert', 'Client::transfert');
+// Default route - redirect to client login
+$routes->get('/', 'Client::index');
 
-$routes->get('/operateur/comptes', 'Operateur::comptes');
-$routes->get('/operateur/gains', 'Operateur::gains');
-$routes->get('/operateur/operations', 'Operateur::operations');
-$routes->get('/operateur/prefixes', 'Operateur::prefixes');
+// Client routes - grouped and secured
+$routes->group('client', ['filter' => 'nocache'], function($routes) {
+    // Public routes (login/logout)
+    $routes->get('login', 'Client::login');
+    $routes->post('authenticate', 'Client::authenticate');
+    $routes->get('logout', 'Client::logout');
+    
+    // Protected routes (require authentication)
+    $routes->get('solde', 'Client::solde');
+    $routes->get('depot', 'Client::depot');
+    $routes->post('processDepot', 'Client::processDepot');
+    $routes->get('retrait', 'Client::retrait');
+    $routes->post('processRetrait', 'Client::processRetrait');
+    $routes->get('transfert', 'Client::transfert');
+    $routes->post('processTransfert', 'Client::processTransfert');
+    $routes->get('rechercherClient', 'Client::rechercherClient');
+    $routes->get('historique', 'Client::historique');
+    $routes->get('profil', 'Client::profil');
+    $routes->post('updateProfil', 'Client::updateProfil');
+});
+
+// Operateur routes - grouped
+$routes->group('operateur', function($routes) {
+    $routes->get('comptes', 'Operateur::comptes');
+    $routes->get('gains', 'Operateur::gains');
+    $routes->get('operations', 'Operateur::operations');
+    $routes->get('prefixes', 'Operateur::prefixes');
+});

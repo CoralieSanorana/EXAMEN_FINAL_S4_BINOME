@@ -44,4 +44,85 @@ class HistoriqueTransactionModel extends Model
         $db = \Config\Database::connect();
         return $db->table('vue_situation_gains')->get()->getResultArray();
     }
+
+    /**
+     * Récupère l'historique d'un client en utilisant la vue vue_historique_portefeuille_clients
+     * Cette vue gère automatiquement le signe (+/-) selon le rôle du client (envoyeur/receveur)
+     */
+    public function obtenirHistoriqueClientVue($compteId)
+    {
+        $db = \Config\Database::connect();
+        return $db->table('vue_historique_portefeuille_clients')
+                    ->where('compte_concerne_id', $compteId)
+                    ->orderBy('effectue_le', 'DESC')
+                    ->get()
+                    ->getResultArray();
+    }
+
+    /**
+     * Récupère les statistiques d'un client (nombre de transactions par type)
+     */
+    public function getStatistiquesClient($compteId)
+    {
+        $historique = $this->obtenirHistoriqueClientVue($compteId);
+        
+        $stats = [
+            'total' => count($historique),
+            'depot' => 0,
+            'retrait' => 0,
+            'transfert_envoye' => 0,
+            'transfert_recu' => 0,
+            'montant_total_depot' => 0,
+            'montant_total_retrait' => 0,
+            'montant_total_transfert_envoye' => 0,
+            'montant_total_transfert_recu' => 0,
+            'transactions_par_mois' => []
+        ];
+
+        foreach ($historique as $transaction) {
+            $type = $transaction['type_code'];
+            $montant = $transaction['montant_brut'];
+            $date = date('Y-m', strtotime($transaction['effectue_le']));
+            
+            // Compter par type
+            if ($type === 'DEPOT') {
+                $stats['depot']++;
+                $stats['montant_total_depot'] += $montant;
+            } elseif ($type === 'RETRAIT') {
+                $stats['retrait']++;
+                $stats['montant_total_retrait'] += $montant;
+            } elseif ($type === 'TRANSFERT') {
+                $stats['transfert_envoye']++;
+                $stats['montant_total_transfert_envoye'] += $montant;
+            } elseif ($type === 'TRANSFERT_RECU') {
+                $stats['transfert_recu']++;
+                $stats['montant_total_transfert_recu'] += $montant;
+            }
+
+            // Grouper par mois pour le graphique
+            if (!isset($stats['transactions_par_mois'][$date])) {
+                $stats['transactions_par_mois'][$date] = [
+                    'depot' => 0,
+                    'retrait' => 0,
+                    'transfert' => 0,
+                    'transfert_recu' => 0
+                ];
+            }
+
+            if ($type === 'DEPOT') {
+                $stats['transactions_par_mois'][$date]['depot']++;
+            } elseif ($type === 'RETRAIT') {
+                $stats['transactions_par_mois'][$date]['retrait']++;
+            } elseif ($type === 'TRANSFERT') {
+                $stats['transactions_par_mois'][$date]['transfert']++;
+            } elseif ($type === 'TRANSFERT_RECU') {
+                $stats['transactions_par_mois'][$date]['transfert_recu']++;
+            }
+        }
+
+        // Trier les mois par ordre chronologique
+        ksort($stats['transactions_par_mois']);
+
+        return $stats;
+    }
 }
