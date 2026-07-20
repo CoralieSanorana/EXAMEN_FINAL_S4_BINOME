@@ -1,0 +1,4 @@
+writable/*
+writable/MobileMoney.db
+.env
+*.log
