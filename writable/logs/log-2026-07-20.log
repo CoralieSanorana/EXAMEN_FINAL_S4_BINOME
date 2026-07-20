@@ -117,3 +117,194 @@ DEBUG - 2026-07-20 14:33:03 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-07-20 14:35:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-07-20 14:36:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-07-20 14:36:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 14:40:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-07-20 14:40:15 --> Unable to prepare statement: 1, row value misused
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = :t.code:
+AND `os`.`est_interne` = :os.est_interne:
+AND `od`.`est_interne` = :od.est_interne:
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`', [...], false)
+ 5 APPPATH\Models\HistoriqueTransactionModel.php(155): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Controllers\Operateur.php(393): App\Models\HistoriqueTransactionModel->obtenirMontantsParOperateur()
+ 7 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->montant()
+ 8 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 9 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('D:\\EXAMEN FINALE\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+CRITICAL - 2026-07-20 14:40:15 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, row value misused
+[Method: GET, Route: operateur/montant]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = :t.code:
+AND `os`.`est_interne` = :os.est_interne:
+AND `od`.`est_interne` = :od.est_interne:
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`', [...], false)
+ 2 APPPATH\Models\HistoriqueTransactionModel.php(155): CodeIgniter\Database\BaseBuilder->get()
+ 3 APPPATH\Controllers\Operateur.php(393): App\Models\HistoriqueTransactionModel->obtenirMontantsParOperateur()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->montant()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\EXAMEN FINALE\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+CRITICAL - 2026-07-20 14:40:15 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, row value misused
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 174.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = :t.code:
+AND `os`.`est_interne` = :os.est_interne:
+AND `od`.`est_interne` = :od.est_interne:
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`', [...], false)
+ 4 APPPATH\Models\HistoriqueTransactionModel.php(155): CodeIgniter\Database\BaseBuilder->get()
+ 5 APPPATH\Controllers\Operateur.php(393): App\Models\HistoriqueTransactionModel->obtenirMontantsParOperateur()
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->montant()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\EXAMEN FINALE\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+CRITICAL - 2026-07-20 14:40:15 --> [Caused by] Exception: Unable to prepare statement: 1, row value misused
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = \'TRANSFERT\'
+AND `os`.`est_interne` = 1
+AND `od`.`est_interne` = 0
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `od`.`nom` as `operateur_nom`, `od`.`est_interne`, SUM(h.montant) as total_montant_brut, SUM(h.frais_bareme) as total_frais_bareme, COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission, SUM(h.montant + (h.frais_bareme * (cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer, COUNT(h.id) as nombre_transfers
+FROM `historique_transactions` `h`
+JOIN `types_operations` `t` ON `t`.`id` = `h`.`type_operation_id`
+JOIN `comptes_clients` `cs` ON `cs`.`id` = `h`.`compte_source_id`
+LEFT JOIN `operateur_prefixes` `ops` ON `ops`.`prefixe` = substr(cs.numero_telephone, 1, 3) AND `ops`.`statut` = \'actif\'
+LEFT JOIN `operateurs` `os` ON `os`.`id` = `ops`.`operateur_id`
+JOIN `operateurs` `od` ON `od`.`id` = `h`.`operateur_destination_id`
+LEFT JOIN `configuration_commissions` `cc` ON `cc`.`operateur_source_id` = `os`.`id` AND `cc`.`operateur_destination_id` = `od`.`id`
+WHERE `t`.`code` = :t.code:
+AND `os`.`est_interne` = :os.est_interne:
+AND `od`.`est_interne` = :od.est_interne:
+GROUP BY `od`.`id`, `od`.`nom`, `od`.`est_interne`, `cc`.`pourcentage_commission`', [...], false)
+ 5 APPPATH\Models\HistoriqueTransactionModel.php(155): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Controllers\Operateur.php(393): App\Models\HistoriqueTransactionModel->obtenirMontantsParOperateur()
+ 7 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Operateur->montant()
+ 8 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Operateur))
+ 9 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('D:\\EXAMEN FINALE\\EXAMEN_FINAL_S4_BINOME\\public\\index.php')
+DEBUG - 2026-07-20 14:41:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

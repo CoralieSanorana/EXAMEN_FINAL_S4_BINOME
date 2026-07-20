@@ -2,7 +2,7 @@
 
 <?php
 $montants = $montants ?? [];
-$total_global = $total_global ?? '0';
+$total_global = $total_global ?? 0;
 ?>
 
 <?= $this->section('content') ?>
@@ -19,7 +19,7 @@ $total_global = $total_global ?? '0';
                 <i class="bi bi-cash-coin"></i>
             </div>
             <div class="mm-stat-label">Total global à envoyer</div>
-            <div class="mm-stat-value"><?= $total_global ?> Ar</div>
+            <div class="mm-stat-value"><?= number_format($total_global, 2, ',', ' ') ?> Ar</div>
             <div class="mm-stat-subtitle">Ensemble des opérateurs externes</div>
         </div>
     </div>
@@ -47,7 +47,7 @@ $total_global = $total_global ?? '0';
                             </td>
                             <td><?= $montant['nombre_transfers'] ?? 0 ?></td>
                             <td class="text-end">
-                                <strong><?= number_format($montant['total_a_envoyer'] ?? 0, 0, ',', ' ') ?> Ar</strong>
+                                <strong><?= number_format($montant['total_a_envoyer'] ?? 0, 2, ',', ' ') ?> Ar</strong>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -400,7 +400,7 @@ class Operateur extends BaseController
         
         $data = [
             'montants' => $montantsParOperateur,
-            'total_global' => number_format($totalGlobal, 0, ',', ' ')
+            'total_global' => $totalGlobal
         ];
         return view('operateur/montant', $data);
     }
