@@ -369,7 +369,16 @@ class Client extends BaseController
     public function transfert(): string
     {
         $this->checkAuth();
-        return view('client/transfert');
+
+        $prefixesOperateurs = $this->operateurPrefixeModel
+            ->select('operateur_prefixes.prefixe, operateur_prefixes.operateur_id, operateurs.nom as operateur_nom')
+            ->join('operateurs', 'operateurs.id = operateur_prefixes.operateur_id')
+            ->where('operateur_prefixes.statut', 'actif')
+            ->findAll();
+
+        return view('client/transfert', [
+            'prefixesOperateurs' => $prefixesOperateurs,
+        ]);
     }
 
     public function rechercherClient()
@@ -455,6 +464,33 @@ class Client extends BaseController
 
         $numerosUniques = array_values(array_unique($numerosDestinataires));
         $nombreDestinataires = count($numerosUniques);
+
+        if ($nombreDestinataires > 1) {
+            $operateursDestinataires = [];
+            $nomsOperateurs = [];
+            $numerosSansOperateur = [];
+
+            foreach ($numerosUniques as $numero) {
+                $operateur = $this->operateurPrefixeModel->trouverOperateurParNumero($numero);
+
+                if (!$operateur) {
+                    $numerosSansOperateur[] = $numero;
+                    continue;
+                }
+
+                $operateursDestinataires[$numero] = (int) $operateur['operateur_id'];
+                $nomsOperateurs[(int) $operateur['operateur_id']] = $operateur['operateur_nom'] ?? ('Préfixe ' . $operateur['prefixe']);
+            }
+
+            if (!empty($numerosSansOperateur)) {
+                return redirect()->back()->withInput()->with('error', 'Préfixes destinataires non reconnus : ' . implode(', ', $numerosSansOperateur));
+            }
+
+            if (count(array_unique($operateursDestinataires)) > 1) {
+                return redirect()->back()->withInput()->with('error', 'Les numéros d\'un envoi multiple doivent appartenir au même opérateur');
+            }
+        }
+
         $montantParDestinataire = $montant / $nombreDestinataires;
 
         if ($montantParDestinataire < 100) {

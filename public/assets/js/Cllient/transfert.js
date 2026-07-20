@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isNaN(solde)) solde = 0;
 
     const emetteurNormalise = normaliserNumero(numeroEmetteur.value);
+    const prefixesOperateurs = Array.isArray(window.prefixesOperateurs) ? window.prefixesOperateurs : [];
+    const prefixeVersOperateur = {};
+
+    prefixesOperateurs.forEach(item => {
+        if (item && item.prefixe) {
+            prefixeVersOperateur[String(item.prefixe)] = item;
+        }
+    });
 
     const baremeRetrait = [
         { min: 100, max: 1000, frais: 50 },
@@ -86,12 +94,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .filter(Boolean);
     }
 
+    function trouverOperateur(numero) {
+        const prefixe = String(numero || '').substring(0, 3);
+        return prefixeVersOperateur[prefixe] || null;
+    }
+
     function analyserDestinataires() {
         const numeros = extraireNumeros();
         const erreurs = [];
         const doublons = [];
         const invalides = [];
         const soiMeme = [];
+        const prefixesInconnus = [];
+        const operateursDetectes = {};
         const compteParNumero = {};
 
         numeros.forEach(numero => {
@@ -110,11 +125,20 @@ document.addEventListener('DOMContentLoaded', function() {
         uniques.forEach(numero => {
             if (!regexNumero.test(numero)) {
                 invalides.push(numero);
+                return;
             }
 
             if (numero === emetteurNormalise) {
                 soiMeme.push(numero);
             }
+
+            const operateur = trouverOperateur(numero);
+            if (!operateur) {
+                prefixesInconnus.push(numero);
+                return;
+            }
+
+            operateursDetectes[String(operateur.operateur_id)] = operateur.operateur_nom;
         });
 
         if (doublons.length) {
@@ -129,9 +153,19 @@ document.addEventListener('DOMContentLoaded', function() {
             erreurs.push(`Vous ne pouvez pas vous transférer à vous-même : ${soiMeme.join(', ')}`);
         }
 
+        if (prefixesInconnus.length) {
+            erreurs.push(`Préfixes non reconnus : ${prefixesInconnus.join(', ')}`);
+        }
+
+        const operateurIds = Object.keys(operateursDetectes);
+        if (uniques.length > 1 && operateurIds.length > 1) {
+            erreurs.push('Les numéros d\'un envoi multiple doivent appartenir au même opérateur');
+        }
+
         return {
             numeros: uniques,
-            erreurs
+            erreurs,
+            operateurCommun: operateurIds.length === 1 ? operateursDetectes[operateurIds[0]] : null
         };
     }
 
@@ -189,7 +223,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        destinatairesResume.textContent = `${analyse.numeros.length} destinataire(s) prêt(s) à recevoir le transfert.`;
+        const suffixeOperateur = analyse.operateurCommun ? ` - Opérateur : ${analyse.operateurCommun}` : '';
+        destinatairesResume.textContent = `${analyse.numeros.length} destinataire(s) prêt(s) à recevoir le transfert${suffixeOperateur}.`;
         destinatairesPreview.textContent = analyse.numeros.join(', ');
         destinatairesInfo.style.display = 'block';
     }

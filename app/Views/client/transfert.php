@@ -48,6 +48,7 @@
                     </div>
                     <div class="form-text">
                         Saisissez un ou plusieurs numéros séparés par des virgules. Les retours à la ligne et points-virgules sont aussi acceptés.
+                        Pour un envoi multiple, tous les numéros doivent appartenir au même opérateur.
                     </div>
                     <div id="destinatairesInfo" class="mt-2" style="display:none;">
                         <div class="alert alert-success py-2 px-3 mb-0">
@@ -132,6 +133,9 @@
     </div>
 </div>
 
+<script>
+    window.prefixesOperateurs = <?= json_encode($prefixesOperateurs ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+</script>
 <script src="/assets/js/Cllient/transfert.js"></script>
 
 <?= $this->endSection() ?>
