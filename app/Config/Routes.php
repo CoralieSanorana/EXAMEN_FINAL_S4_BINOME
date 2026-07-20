@@ -51,4 +51,10 @@ $routes->group('operateur', function($routes) {
     $routes->post('addBareme', 'Operateur::addBareme', ['filter' => 'auth']);
     $routes->post('editBareme/(:num)/(:num)', 'Operateur::editBareme/$1/$2', ['filter' => 'auth']);
     $routes->get('deleteBareme/(:num)/(:num)', 'Operateur::deleteBareme/$1/$2', ['filter' => 'auth']);
+    $routes->get('commissions', 'Operateur::commissions', ['filter' => 'auth']);
+    $routes->post('addCommission', 'Operateur::addCommission', ['filter' => 'auth']);
+    $routes->post('editCommission/(:num)', 'Operateur::editCommission/$1', ['filter' => 'auth']);
+    $routes->get('deleteCommission/(:num)', 'Operateur::deleteCommission/$1', ['filter' => 'auth']);
+    $routes->get('montant', 'Operateur::montant', ['filter' => 'auth']);
+
 });

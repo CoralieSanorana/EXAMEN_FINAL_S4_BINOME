@@ -10,14 +10,18 @@ class HistoriqueTransactionModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'compte_destination_id', 'montant', 'frais_appliques'];
+    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'numero_destinataire', 'compte_destination_id', 'operateur_destination_id', 'montant', 'frais_bareme', 'frais_commission', 'reference_groupe'];
 
     protected $validationRules      = [
-        'type_operation_id'     => 'required|integer',
-        'compte_source_id'      => 'required|integer',
-        'compte_destination_id' => 'permit_empty|integer',
-        'montant'               => 'required|numeric|greater_than[0]',
-        'frais_appliques'       => 'required|numeric|greater_than_equal_to[0]'
+        'type_operation_id'       => 'required|integer',
+        'compte_source_id'        => 'required|integer',
+        'numero_destinataire'     => 'permit_empty|max_length[20]',
+        'compte_destination_id'   => 'permit_empty|integer',
+        'operateur_destination_id'=> 'permit_empty|integer',
+        'montant'                 => 'required|numeric|greater_than[0]',
+        'frais_bareme'            => 'required|numeric|greater_than_equal_to[0]',
+        'frais_commission'        => 'required|numeric|greater_than_equal_to[0]',
+        'reference_groupe'        => 'permit_empty|max_length[100]'
     ];
     protected $skipValidation       = false;
 
@@ -26,7 +30,7 @@ class HistoriqueTransactionModel extends Model
      */
     public function obtenirHistoriqueClient($compteId)
     {
-        return $this->select('historique_transactions.*, types_operations.nom as type_nom, types_operations.code as type_code')
+        return $this->select('historique_transactions.*, (historique_transactions.frais_bareme + historique_transactions.frais_commission) as frais_appliques, types_operations.nom as type_nom, types_operations.code as type_code')
                     ->join('types_operations', 'types_operations.id = historique_transactions.type_operation_id')
                     ->groupStart()
                         ->where('compte_source_id', $compteId)
@@ -43,6 +47,99 @@ class HistoriqueTransactionModel extends Model
     {
         $db = \Config\Database::connect();
         return $db->table('vue_situation_gains')->get()->getResultArray();
+    }
+
+    /**
+     * Récupère les gains séparés par réseau (interne vs externe)
+     * - Interne : somme des frais_bareme sur les transactions émises par un numéro de notre opérateur
+     * - Externe : somme des frais_commission sur les transferts de notre opérateur vers les autres opérateurs
+     */
+    public function obtenirGainsSepares()
+    {
+        $db = \Config\Database::connect();
+
+        $gains = [
+            'interne' => [
+                'retrait' => 0,
+                'transfert' => 0,
+                'total' => 0,
+                'details' => []
+            ],
+            'externe' => [
+                'retrait' => 0,
+                'transfert' => 0,
+                'total' => 0,
+                'details' => []
+            ]
+        ];
+
+        $internes = $db->table('historique_transactions h')
+            ->select('t.code AS type_operation, SUM(h.frais_bareme) AS total_bareme')
+            ->join('types_operations t', 't.id = h.type_operation_id')
+            ->join('comptes_clients cs', 'cs.id = h.compte_source_id')
+            ->join('operateur_prefixes ops', "ops.prefixe = substr(cs.numero_telephone, 1, 3) AND ops.statut = 'actif'", 'left')
+            ->join('operateurs os', 'os.id = ops.operateur_id', 'left')
+            ->where('os.est_interne', 1)
+            ->whereIn('t.code', ['RETRAIT', 'TRANSFERT'])
+            ->groupBy('t.code')
+            ->get()
+            ->getResultArray();
+
+        foreach ($internes as $row) {
+            $type = $row['type_operation'] ?? null;
+            $montant = (float) ($row['total_bareme'] ?? 0);
+
+            if ($type === 'RETRAIT') {
+                $gains['interne']['retrait'] = $montant;
+            } elseif ($type === 'TRANSFERT') {
+                $gains['interne']['transfert'] = $montant;
+            }
+        }
+
+        $gains['interne']['total'] = $gains['interne']['retrait'] + $gains['interne']['transfert'];
+
+        $externes = $db->table('historique_transactions h')
+            ->select("od.nom AS operateur_destination, SUM(h.frais_commission) AS total_commission")
+            ->join('types_operations t', 't.id = h.type_operation_id')
+            ->join('comptes_clients cs', 'cs.id = h.compte_source_id')
+            ->join('operateur_prefixes ops', "ops.prefixe = substr(cs.numero_telephone, 1, 3) AND ops.statut = 'actif'", 'left')
+            ->join('operateurs os', 'os.id = ops.operateur_id', 'left')
+            ->join('operateurs od', 'od.id = h.operateur_destination_id', 'left')
+            ->where('os.est_interne', 1)
+            ->where('t.code', 'TRANSFERT')
+            ->where('od.est_interne', 0)
+            ->groupBy('od.id, od.nom')
+            ->get()
+            ->getResultArray();
+
+        foreach ($externes as $row) {
+            $montant = (float) ($row['total_commission'] ?? 0);
+            $gains['externe']['transfert'] += $montant;
+            $gains['externe']['total'] += $montant;
+            $gains['externe']['details'][] = [
+                'operateur' => $row['operateur_destination'] ?? 'Opérateur inconnu',
+                'montant' => $montant,
+            ];
+        }
+
+        return $gains;
+    }
+
+    /**
+     * Récupère les montants transférés par opérateur de destination (table de compensation)
+     */
+    public function obtenirMontantsParOperateur()
+    {
+        return $this->select('operateurs.nom as operateur_nom, 
+                                  operateurs.est_interne,
+                                  SUM(historique_transactions.montant) as total_montant,
+                                  COUNT(historique_transactions.id) as nombre_transfers')
+                     ->join('operateurs', 'operateurs.id = historique_transactions.operateur_destination_id')
+                     ->where('historique_transactions.type_operation_id', 3) // TRANSFERT
+                     ->where('historique_transactions.operateur_destination_id IS NOT NULL')
+                     ->where('operateurs.est_interne', 0) // Seulement les opérateurs externes
+                     ->groupBy('operateurs.id, operateurs.nom, operateurs.est_interne')
+                     ->findAll();
     }
 
     /**

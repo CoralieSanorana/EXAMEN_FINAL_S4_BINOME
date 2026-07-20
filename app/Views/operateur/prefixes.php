@@ -17,31 +17,32 @@
 
 <div class="row">
     <div class="col-lg-7">
-        <div class="mm-card">
-            <div class="mm-card-title"><i class="bi bi-list-ul"></i> Préfixes configurés</div>
+        <!-- Tableau 1: Préfixes de mon opérateur (interne) -->
+        <div class="mm-card mb-4">
+            <div class="mm-card-title"><i class="bi bi-building"></i> Préfixes de mon opérateur</div>
 
             <table class="table mm-table">
                 <thead>
                     <tr>
                         <th>Préfixe</th>
-                        <th>Libellé</th>
+                        <th>Opérateur</th>
                         <th>Statut</th>
                         <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($prefixes)): ?>
-                        <?php foreach ($prefixes as $prefixe): ?>
+                    <?php if (!empty($prefixes_internes)): ?>
+                        <?php foreach ($prefixes_internes as $prefixe): ?>
                             <tr>
                                 <td><strong><?= $prefixe['prefixe'] ?></strong></td>
-                                <td><?= $prefixe['libelle'] ?? 'Non défini' ?></td>
+                                <td><?= $prefixe['operateur_nom'] ?? 'Non défini' ?></td>
                                 <td>
                                     <span class="badge badge-mm <?= $prefixe['statut'] === 'actif' ? 'badge-depot' : 'badge-retrait' ?>">
                                         <?= ucfirst($prefixe['statut'] ?? 'actif') ?>
                                     </span>
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-mm-outline btn-sm" onclick="editPrefixe(<?= $prefixe['id'] ?>, '<?= $prefixe['prefixe'] ?>', '<?= $prefixe['libelle'] ?? '' ?>', '<?= $prefixe['statut'] ?? 'actif' ?>')">
+                                    <button class="btn btn-mm-outline btn-sm" onclick="editPrefixe(<?= $prefixe['id'] ?>, '<?= $prefixe['prefixe'] ?>', <?= $prefixe['operateur_id'] ?>, '<?= $prefixe['statut'] ?? 'actif' ?>')">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <a href="<?= base_url('operateur/deletePrefixe/' . $prefixe['id']) ?>" class="btn btn-mm-outline btn-sm text-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce préfixe ?')">
@@ -52,7 +53,50 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="text-center">Aucun préfixe configuré</td>
+                            <td colspan="4" class="text-center">Aucun préfixe configuré pour votre opérateur</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tableau 2: Préfixes des autres opérateurs (externe) -->
+        <div class="mm-card">
+            <div class="mm-card-title"><i class="bi bi-globe"></i> Préfixes des autres opérateurs</div>
+
+            <table class="table mm-table">
+                <thead>
+                    <tr>
+                        <th>Préfixe</th>
+                        <th>Opérateur</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($prefixes_externes)): ?>
+                        <?php foreach ($prefixes_externes as $prefixe): ?>
+                            <tr>
+                                <td><strong><?= $prefixe['prefixe'] ?></strong></td>
+                                <td><?= $prefixe['operateur_nom'] ?? 'Non défini' ?></td>
+                                <td>
+                                    <span class="badge badge-mm <?= $prefixe['statut'] === 'actif' ? 'badge-depot' : 'badge-retrait' ?>">
+                                        <?= ucfirst($prefixe['statut'] ?? 'actif') ?>
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-mm-outline btn-sm" onclick="editPrefixe(<?= $prefixe['id'] ?>, '<?= $prefixe['prefixe'] ?>', <?= $prefixe['operateur_id'] ?>, '<?= $prefixe['statut'] ?? 'actif' ?>')">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <a href="<?= base_url('operateur/deletePrefixe/' . $prefixe['id']) ?>" class="btn btn-mm-outline btn-sm text-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce préfixe ?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="4" class="text-center">Aucun préfixe configuré pour les autres opérateurs</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -66,12 +110,19 @@
 
             <form action="<?= base_url('operateur/addPrefixe') ?>" method="post">
                 <div class="mb-3">
-                    <label class="form-label">Préfixe (3 chiffres)</label>
-                    <input type="text" name="prefixe" class="form-control" placeholder="Ex : 034" maxlength="3" required pattern="[0-9]{3}">
+                    <label class="form-label">Opérateur</label>
+                    <select name="operateur_id" class="form-select" required>
+                        <option value="">Sélectionner un opérateur</option>
+                        <?php foreach ($operateurs as $operateur): ?>
+                            <option value="<?= $operateur['id'] ?>">
+                                <?= $operateur['nom'] ?> <?= $operateur['est_interne'] == 1 ? '(Mon opérateur)' : '(Autre)' ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Libellé</label>
-                    <input type="text" name="libelle" class="form-control" placeholder="Ex : Orange Madagascar" required>
+                    <label class="form-label">Préfixe (3 chiffres)</label>
+                    <input type="text" name="prefixe" class="form-control" placeholder="Ex : 034" maxlength="3" required pattern="[0-9]{3}">
                 </div>
                 <div class="mb-4">
                     <label class="form-label">Statut</label>
@@ -100,12 +151,19 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="editId">
                     <div class="mb-3">
-                        <label class="form-label">Préfixe (3 chiffres)</label>
-                        <input type="text" name="prefixe" id="editPrefixe" class="form-control" maxlength="3" required pattern="[0-9]{3}">
+                        <label class="form-label">Opérateur</label>
+                        <select name="operateur_id" id="editOperateurId" class="form-select" required>
+                            <option value="">Sélectionner un opérateur</option>
+                            <?php foreach ($operateurs as $operateur): ?>
+                                <option value="<?= $operateur['id'] ?>">
+                                    <?= $operateur['nom'] ?> <?= $operateur['est_interne'] == 1 ? '(Mon opérateur)' : '(Autre)' ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Libellé</label>
-                        <input type="text" name="libelle" id="editLibelle" class="form-control" required>
+                        <label class="form-label">Préfixe (3 chiffres)</label>
+                        <input type="text" name="prefixe" id="editPrefixe" class="form-control" maxlength="3" required pattern="[0-9]{3}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Statut</label>
@@ -125,10 +183,10 @@
 </div>
 
 <script>
-function editPrefixe(id, prefixe, libelle, statut) {
+function editPrefixe(id, prefixe, operateurId, statut) {
     document.getElementById('editId').value = id;
     document.getElementById('editPrefixe').value = prefixe;
-    document.getElementById('editLibelle').value = libelle;
+    document.getElementById('editOperateurId').value = operateurId;
     document.getElementById('editStatut').value = statut;
     document.getElementById('editForm').action = '<?= base_url('operateur/editPrefixe/') ?>' + id;
     var modal = new bootstrap.Modal(document.getElementById('editModal'));
