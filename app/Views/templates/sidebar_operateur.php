@@ -1,4 +1,4 @@
-<aside class="mm-sidebar">
+<aside id="mobileSidebar" class="mm-sidebar" aria-label="Navigation principale">
     <div class="mm-nav-title">Supervision</div>
     <nav class="nav flex-column">
         <a class="nav-link <?= uri_string() === 'operateur/gains' ? 'active' : '' ?>" href="<?= base_url('operateur/gains'); ?>">

@@ -30,7 +30,7 @@ class Client extends BaseController
         return redirect()->to('/client/login');
     }
 
-    public function login(): string
+    public function login()
     {
         // If already logged in, redirect to dashboard
         if ($this->session->get('client_id')) {
