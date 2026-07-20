@@ -3,7 +3,7 @@
 <head>
     <?= $this->include('templates/head') ?>
 </head>
-<body>
+<body class="mm-operator-body">
 
     <?= $this->include('templates/header_operateur') ?>
 
@@ -11,7 +11,7 @@
         <?= $this->include('templates/sidebar_operateur') ?>
         <div class="mm-sidebar-backdrop" aria-hidden="true"></div>
 
-        <main class="mm-main">
+        <main class="mm-main mm-operator-main">
             <?= $this->renderSection('content') ?>
         </main>
     </div>
