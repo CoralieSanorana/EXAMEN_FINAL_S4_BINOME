@@ -68,7 +68,29 @@ class Client extends BaseController
 
             return redirect()->to('/client/solde')->with('success', 'Bienvenue ' . ($compte['prenom'] ?? '') . ' !');
         } else {
-            return redirect()->back()->with('error', 'Ce numéro de téléphone n\'a pas de compte');
+            // Auto-create account if not found
+            try {
+                $newAccountId = $this->compteModel->insert([
+                    'numero_telephone' => $telephone,
+                    'solde' => 0,
+                    'nom' => null,
+                    'prenom' => null
+                ]);
+
+                // Set session data for new account
+                $this->session->set([
+                    'client_id' => $newAccountId,
+                    'client_telephone' => $telephone,
+                    'client_solde' => 0,
+                    'client_nom' => '',
+                    'client_prenom' => '',
+                    'logged_in' => true
+                ]);
+
+                return redirect()->to('/client/solde')->with('success', 'Compte créé automatiquement ! Bienvenue sur MobileMoney.');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Erreur lors de la création du compte: ' . $e->getMessage())->withInput();
+            }
         }
     }
 
