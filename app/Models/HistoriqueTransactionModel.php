@@ -50,6 +50,77 @@ class HistoriqueTransactionModel extends Model
     }
 
     /**
+     * Récupère les gains séparés par réseau (interne vs externe)
+     */
+    public function obtenirGainsSepares()
+    {
+        $db = \Config\Database::connect();
+        $results = $db->table('vue_situation_gains')->get()->getResultArray();
+        
+        $gains = [
+            'interne' => [
+                'retrait' => 0,
+                'transfert' => 0,
+                'total' => 0,
+                'details' => []
+            ],
+            'externe' => [
+                'retrait' => 0,
+                'transfert' => 0,
+                'total' => 0,
+                'details' => []
+            ]
+        ];
+        
+        foreach ($results as $row) {
+            $reseau = $row['reseau_concerne'] ?? 'Non défini';
+            $type = $row['type_operation'];
+            $totalFrais = (float) ($row['total_gains_frais'] ?? 0);
+            $totalBareme = (float) ($row['total_gains_bareme'] ?? 0);
+            $totalCommission = (float) ($row['total_gains_commission'] ?? 0);
+            
+            if (strpos($reseau, 'Notre Réseau') !== false || $reseau === 'Notre Réseau') {
+                // Gains internes
+                if ($type === 'RETRAIT') {
+                    $gains['interne']['retrait'] += $totalFrais;
+                } elseif ($type === 'TRANSFERT') {
+                    $gains['interne']['transfert'] += $totalFrais;
+                }
+                $gains['interne']['total'] += $totalFrais;
+            } else {
+                // Gains externes (commissions)
+                if ($type === 'TRANSFERT') {
+                    $gains['externe']['transfert'] += $totalFrais;
+                    $gains['externe']['details'][] = [
+                        'operateur' => $reseau,
+                        'montant' => $totalCommission
+                    ];
+                }
+                $gains['externe']['total'] += $totalFrais;
+            }
+        }
+        
+        return $gains;
+    }
+
+    /**
+     * Récupère les montants transférés par opérateur de destination (table de compensation)
+     */
+    public function obtenirMontantsParOperateur()
+    {
+        return $this->select('operateurs.nom as operateur_nom, 
+                                  operateurs.est_interne,
+                                  SUM(historique_transactions.montant) as total_montant,
+                                  COUNT(historique_transactions.id) as nombre_transfers')
+                     ->join('operateurs', 'operateurs.id = historique_transactions.operateur_destination_id')
+                     ->where('historique_transactions.type_operation_id', 3) // TRANSFERT
+                     ->where('historique_transactions.operateur_destination_id IS NOT NULL')
+                     ->where('operateurs.est_interne', 0) // Seulement les opérateurs externes
+                     ->groupBy('operateurs.id, operateurs.nom, operateurs.est_interne')
+                     ->findAll();
+    }
+
+    /**
      * Récupère l'historique d'un client en utilisant la vue vue_historique_portefeuille_clients
      * Cette vue gère automatiquement le signe (+/-) selon le rôle du client (envoyeur/receveur)
      */
