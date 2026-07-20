@@ -172,7 +172,7 @@
         - [ok] sidebar_client.php: added "Mon profil" link
 
 **Coralie ETU004250**
-- [] Securite
-    - [] Securiser les url, on ne peut pas naviguer sans etre connecter
-        - [] Creer AhthFilter.php pour verifier la connection
-        - [] Securiser les routes
+- [ok] Securite
+    - [ok] Securiser les url, on ne peut pas naviguer sans etre connecter
+        - [ok] Creer AhthFilter.php pour verifier la connection
+        - [ok] Securiser les routes
