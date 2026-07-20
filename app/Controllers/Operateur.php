@@ -395,7 +395,7 @@ class Operateur extends BaseController
         // Calculer le total global
         $totalGlobal = 0;
         foreach ($montantsParOperateur as $montant) {
-            $totalGlobal += (float) ($montant['total_montant'] ?? 0);
+            $totalGlobal += (float) ($montant['total_a_envoyer'] ?? 0);
         }
         
         $data = [

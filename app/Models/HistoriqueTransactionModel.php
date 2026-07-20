@@ -126,20 +126,34 @@ class HistoriqueTransactionModel extends Model
     }
 
     /**
-     * Récupère les montants transférés par opérateur de destination (table de compensation)
+     * Récupère les montants à envoyer par opérateur externe (table de compensation)
+     * Formule appliquée : montant + (frais_bareme * pourcentage_commission / 100)
+     * Uniquement pour les transferts depuis notre opérateur vers les autres opérateurs.
      */
     public function obtenirMontantsParOperateur()
     {
-        return $this->select('operateurs.nom as operateur_nom, 
-                                  operateurs.est_interne,
-                                  SUM(historique_transactions.montant) as total_montant,
-                                  COUNT(historique_transactions.id) as nombre_transfers')
-                     ->join('operateurs', 'operateurs.id = historique_transactions.operateur_destination_id')
-                     ->where('historique_transactions.type_operation_id', 3) // TRANSFERT
-                     ->where('historique_transactions.operateur_destination_id IS NOT NULL')
-                     ->where('operateurs.est_interne', 0) // Seulement les opérateurs externes
-                     ->groupBy('operateurs.id, operateurs.nom, operateurs.est_interne')
-                     ->findAll();
+        $db = \Config\Database::connect();
+
+        return $db->table('historique_transactions h')
+            ->select("od.nom as operateur_nom,
+                      od.est_interne,
+                      SUM(h.montant) as total_montant_brut,
+                      SUM(h.frais_bareme) as total_frais_bareme,
+                      COALESCE(cc.pourcentage_commission, 0) as pourcentage_commission,
+                      SUM(h.montant + (h.frais_bareme * COALESCE(cc.pourcentage_commission, 0) / 100.0)) as total_a_envoyer,
+                      COUNT(h.id) as nombre_transfers")
+            ->join('types_operations t', 't.id = h.type_operation_id')
+            ->join('comptes_clients cs', 'cs.id = h.compte_source_id')
+            ->join('operateur_prefixes ops', "ops.prefixe = substr(cs.numero_telephone, 1, 3) AND ops.statut = 'actif'", 'left')
+            ->join('operateurs os', 'os.id = ops.operateur_id', 'left')
+            ->join('operateurs od', 'od.id = h.operateur_destination_id')
+            ->join('configuration_commissions cc', 'cc.operateur_source_id = os.id AND cc.operateur_destination_id = od.id', 'left')
+            ->where('t.code', 'TRANSFERT')
+            ->where('os.est_interne', 1)
+            ->where('od.est_interne', 0)
+            ->groupBy('od.id, od.nom, od.est_interne, cc.pourcentage_commission')
+            ->get()
+            ->getResultArray();
     }
 
     /**

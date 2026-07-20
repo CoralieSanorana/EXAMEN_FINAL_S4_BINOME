@@ -1,5 +1,10 @@
 <?= $this->extend('layouts/layout_operateur') ?>
 
+<?php
+$montants = $montants ?? [];
+$total_global = $total_global ?? '0';
+?>
+
 <?= $this->section('content') ?>
 
 <div class="mm-page-header">
@@ -42,7 +47,7 @@
                             </td>
                             <td><?= $montant['nombre_transfers'] ?? 0 ?></td>
                             <td class="text-end">
-                                <strong><?= number_format($montant['total_montant'] ?? 0, 0, ',', ' ') ?> Ar</strong>
+                                <strong><?= number_format($montant['total_a_envoyer'] ?? 0, 0, ',', ' ') ?> Ar</strong>
                             </td>
                         </tr>
                     <?php endforeach; ?>
