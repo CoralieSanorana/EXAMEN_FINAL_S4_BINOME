@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS historique_transactions (
     compte_destination_id INTEGER, -- NULL si Dépôt ou Retrait standard
     montant REAL NOT NULL,
     frais_appliques REAL NOT NULL,
+    reference_groupe TEXT NULL,
     effectue_le TEXT DEFAULT (CURRENT_TIMESTAMP),
     FOREIGN KEY (type_operation_id) REFERENCES types_operations(id) ON DELETE RESTRICT,
     FOREIGN KEY (compte_source_id) REFERENCES comptes_clients(id) ON DELETE RESTRICT,

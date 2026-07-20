@@ -74,7 +74,7 @@
         - [ok] Recherche par numéro de téléphone
 
 **Funaki ETU004169**
-- [] Coté Client (Interface Mobile)
+- [ok] Coté Client (Interface Mobile)
     - [ok] Login automatique via le numéro de téléphone (authentification/création directe)
         - [ok] Controller Client.php: login(), authenticate(), logout()
         - [ok] Session management with client_id, client_telephone, client_solde
@@ -176,3 +176,23 @@
     - [ok] Securiser les url, on ne peut pas naviguer sans etre connecter
         - [ok] Creer AhthFilter.php pour verifier la connection
         - [ok] Securiser les routes
+**Funaki ETU004169**
+- [ok] Option : Inclure les frais de retrait lors de l'envoi (Frais cumulés)
+    - [ok] Modifier la méthode `processTransfert()` pour récupérer l'état du switch d'inclusion des frais de retrait
+    - [ok] Adapter l'algorithme financier de calcul des frais :
+    - [ok] Étape 1 : Si coché, chercher d'abord les frais théoriques dans `bareme_frais` pour un RETRAIT (type 2) basé sur le montant de base divisé par destinataire
+    - [ok] Étape 2 : Définir le nouveau sous-total à transférer : `Montant_Transfert = Montant_de_base + Frais_Retrait_Theorique`
+    - [ok] Étape 3 : Calculer les frais de TRANSFERT finaux (type 3) à partir de ce nouveau sous-total
+    - [ok] Étape 4 : Créditer le destinataire du sous-total `Montant_Transfert` complet (Montant + frais de retrait inclus)
+    - [ok] Étape 5 : Débiter l'expéditeur de `Montant_Transfert + Frais_Transfert_Finaux`
+    - [ok] Mettre à jour `transfert.js` pour refléter exactement ce double calcul dynamique sur le récapitulatif visuel avant soumission
+    - [ok] Garantir que les contraintes de solde minimum vérifient bien ce grand total cumulé
+
+- [ok] Option : Envoi multiple vers plusieurs numéros simultanés
+    - [ok] Évolution de la base de données : ajouter une colonne `reference_groupe TEXT NULL` dans la table `historique_transactions` pour identifier les envois groupés
+    - [ok] Modifier l'interface `transfert.php` : remplacer l'input de téléphone par un `<textarea>` acceptant plusieurs numéros séparés par des virgules
+    - [ok] Adapter le script `transfert.js` : parser la saisie, compter les destinataires et afficher en temps réel la part brute allouée à chacun (`Montant_Total / Nbr_Destinataires`)
+    - [ok] Gérer l'algorithme d'envoi dans le contrôleur :
+    - [ok] Découper les numéros, valider l'existence de chaque compte
+    - [ok] Exécuter la boucle de calcul (en appliquant la règle des frais cumulés ou standards par tranche individuelle) à l'intérieur d'un bloc `$db->transStart()`
+    - [ok] Si le solde total requis pour l'ensemble des numéros dépasse le solde de l'expéditeur, effectuer un rollback complet
