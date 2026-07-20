@@ -10,22 +10,33 @@
             <p class="text-muted small mb-0">Connectez-vous avec votre numéro de téléphone</p>
         </div>
 
-        <form action="/client/authenticate" method="post">
+        <form action="/client/authenticate" method="post" id="loginForm">
             <?= csrf_field() ?>
             <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
             <?php endif; ?>
             
             <div class="mb-3">
                 <label class="form-label">Numéro de téléphone</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-phone"></i></span>
-                    <input type="text" name="telephone" class="form-control" placeholder="033 12 345 67" required>
+                    <input type="text" name="telephone" class="form-control" id="telephoneInput" placeholder="033 12 345 67" value="<?= old('telephone') ?>" required>
                 </div>
                 <div class="form-text">Aucune inscription requise, la connexion est automatique.</div>
+                <div id="telephoneError" class="text-danger small mt-1" style="display:none;"></div>
             </div>
 
-            <button type="submit" class="btn btn-mm-primary w-100 mt-2">
+            <button type="submit" class="btn btn-mm-primary w-100 mt-2" id="submitBtn">
                 <i class="bi bi-box-arrow-in-right"></i> Se connecter
             </button>
         </form>
@@ -36,5 +47,7 @@
         </p>
     </div>
 </div>
+
+<script src="/assets/js/Cllient/login.js"></script>
 
 <?= $this->endSection() ?>

@@ -10,7 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Client::index');
 
 // Client routes - grouped and secured
-$routes->group('client', function($routes) {
+$routes->group('client', ['filter' => 'nocache'], function($routes) {
     // Public routes (login/logout)
     $routes->get('login', 'Client::login');
     $routes->post('authenticate', 'Client::authenticate');
@@ -19,9 +19,15 @@ $routes->group('client', function($routes) {
     // Protected routes (require authentication)
     $routes->get('solde', 'Client::solde');
     $routes->get('depot', 'Client::depot');
+    $routes->post('processDepot', 'Client::processDepot');
     $routes->get('retrait', 'Client::retrait');
+    $routes->post('processRetrait', 'Client::processRetrait');
     $routes->get('transfert', 'Client::transfert');
+    $routes->post('processTransfert', 'Client::processTransfert');
+    $routes->get('rechercherClient', 'Client::rechercherClient');
     $routes->get('historique', 'Client::historique');
+    $routes->get('profil', 'Client::profil');
+    $routes->post('updateProfil', 'Client::updateProfil');
 });
 
 // Operateur routes - grouped
