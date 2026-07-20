@@ -10,12 +10,17 @@
             <p class="text-muted small mb-0">Connectez-vous avec votre numéro de téléphone</p>
         </div>
 
-        <form>
+        <form action="/client/authenticate" method="post">
+            <?= csrf_field() ?>
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+            <?php endif; ?>
+            
             <div class="mb-3">
                 <label class="form-label">Numéro de téléphone</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-phone"></i></span>
-                    <input type="text" class="form-control" placeholder="033 12 345 67">
+                    <input type="text" name="telephone" class="form-control" placeholder="033 12 345 67" required>
                 </div>
                 <div class="form-text">Aucune inscription requise, la connexion est automatique.</div>
             </div>
