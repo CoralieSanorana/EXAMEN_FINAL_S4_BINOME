@@ -43,6 +43,9 @@
 
         <hr class="my-4">
         <p class="text-center text-muted small mb-0">
+            <a href="/operateur/login" class="text-muted text-decoration-none">Se connecter en tant qu'opérateur</a>
+        </p>
+        <p class="text-center text-muted small mb-0 mt-2">
             Espace client &bull; MobileMoney Simulateur &copy; 2026
         </p>
     </div>
