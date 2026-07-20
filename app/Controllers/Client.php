@@ -6,6 +6,8 @@ use App\Models\CompteClientModel;
 use App\Models\HistoriqueTransactionModel;
 use App\Models\TypeOperationModel;
 use App\Models\BaremeFraisModel;
+use App\Models\OperateurPrefixeModel;
+use App\Models\ConfigurationCommissionModel;
 
 class Client extends BaseController
 {
@@ -14,6 +16,8 @@ class Client extends BaseController
     protected $historiqueModel;
     protected $typeOperationModel;
     protected $baremeFraisModel;
+    protected $operateurPrefixeModel;
+    protected $configurationCommissionModel;
 
     public function __construct()
     {
@@ -22,6 +26,8 @@ class Client extends BaseController
         $this->historiqueModel = new HistoriqueTransactionModel();
         $this->typeOperationModel = new TypeOperationModel();
         $this->baremeFraisModel = new BaremeFraisModel();
+        $this->operateurPrefixeModel = new OperateurPrefixeModel();
+        $this->configurationCommissionModel = new ConfigurationCommissionModel();
     }
 
     public function index()
@@ -155,9 +161,12 @@ class Client extends BaseController
             $this->historiqueModel->insert([
                 'type_operation_id' => $typeDepot['id'],
                 'compte_source_id' => $clientId,
+                'numero_destinataire' => null,
                 'compte_destination_id' => null,
+                'operateur_destination_id' => null,
                 'montant' => $montant,
-                'frais_appliques' => $fraisAppliques
+                'frais_bareme' => $fraisAppliques,
+                'frais_commission' => 0,
             ]);
             
             $db->transComplete();
@@ -278,9 +287,12 @@ class Client extends BaseController
             $this->historiqueModel->insert([
                 'type_operation_id' => $typeRetrait['id'],
                 'compte_source_id' => $clientId,
+                'numero_destinataire' => null,
                 'compte_destination_id' => null,
+                'operateur_destination_id' => null,
                 'montant' => $montant,
-                'frais_appliques' => $fraisAppliques
+                'frais_bareme' => $fraisAppliques,
+                'frais_commission' => 0,
             ]);
             
             $db->transComplete();
@@ -478,17 +490,19 @@ class Client extends BaseController
         $totalFraisRetrait = 0.0;
         $totalMontantTransfere = 0.0;
         $totalFraisTransfert = 0.0;
+        $totalFraisCommission = 0.0;
         $totalDebit = 0.0;
 
         foreach ($numerosUniques as $numero) {
             $destinataire = $destinatairesParNumero[$numero];
-            $detail = $this->calculerDetailTransfert($montantParDestinataire, $typeTransfert, $typeRetrait, $inclureFraisRetrait);
+            $detail = $this->calculerDetailTransfert($montantParDestinataire, $destinataire['numero_telephone'], $typeTransfert, $typeRetrait, $inclureFraisRetrait);
             $detail['destinataire'] = $destinataire;
             $detailsTransferts[] = $detail;
 
             $totalFraisRetrait += $detail['frais_retrait'];
             $totalMontantTransfere += $detail['montant_transfert'];
             $totalFraisTransfert += $detail['frais_transfert'];
+            $totalFraisCommission += $detail['frais_commission'];
             $totalDebit += $detail['total_debit'];
         }
 
@@ -517,9 +531,12 @@ class Client extends BaseController
                 if (!$this->historiqueModel->insert([
                     'type_operation_id' => $typeTransfert['id'],
                     'compte_source_id' => $clientId,
+                    'numero_destinataire' => $destinataire['numero_telephone'],
                     'compte_destination_id' => $destinataire['id'],
+                    'operateur_destination_id' => $detail['operateur_destination_id'],
                     'montant' => $detail['montant_transfert'],
-                    'frais_appliques' => $detail['frais_transfert'],
+                    'frais_bareme' => $detail['frais_transfert'],
+                    'frais_commission' => $detail['frais_commission'],
                     'reference_groupe' => $referenceGroupe,
                 ])) {
                     throw new \RuntimeException('Impossible d\'enregistrer l\'historique du transfert');
@@ -541,6 +558,7 @@ class Client extends BaseController
             $message .= ' - Montant de base total : ' . number_format($montant, 2, '.', ' ') . ' Ar'
                 . ' - Montant envoyé cumulé : ' . number_format($totalMontantTransfere, 2, '.', ' ') . ' Ar'
                 . ' - Frais de transfert cumulés : ' . number_format($totalFraisTransfert, 2, '.', ' ') . ' Ar'
+                . ' - Commissions cumulées : ' . number_format($totalFraisCommission, 2, '.', ' ') . ' Ar'
                 . ' - Débit total : ' . number_format($totalDebit, 2, '.', ' ') . ' Ar';
 
             if ($inclureFraisRetrait) {
@@ -572,7 +590,7 @@ class Client extends BaseController
         return preg_replace('/[\s\-\.]/', '', trim((string) $numero)) ?? '';
     }
 
-    private function calculerDetailTransfert(float $montantBase, array $typeTransfert, ?array $typeRetrait, bool $inclureFraisRetrait): array
+    private function calculerDetailTransfert(float $montantBase, ?string $numeroDestinataire, array $typeTransfert, ?array $typeRetrait, bool $inclureFraisRetrait): array
     {
         $fraisRetraitTheorique = 0.0;
 
@@ -585,12 +603,18 @@ class Client extends BaseController
         $baremeTransfert = $this->baremeFraisModel->trouverFrais($typeTransfert['id'], $montantTransfert);
         $fraisTransfert = $baremeTransfert ? (float) $baremeTransfert['frais'] : 0.0;
 
+        $operateurDestination = $this->operateurPrefixeModel->trouverOperateurParNumero($numeroDestinataire);
+        $operateurDestinationId = $operateurDestination['operateur_id'] ?? null;
+        $fraisCommission = 0.0;
+
         return [
             'montant_base' => $montantBase,
             'frais_retrait' => $fraisRetraitTheorique,
             'montant_transfert' => $montantTransfert,
             'frais_transfert' => $fraisTransfert,
-            'total_debit' => $montantTransfert + $fraisTransfert,
+            'frais_commission' => $fraisCommission,
+            'operateur_destination_id' => $operateurDestinationId,
+            'total_debit' => $montantTransfert + $fraisTransfert + $fraisCommission,
         ];
     }
 

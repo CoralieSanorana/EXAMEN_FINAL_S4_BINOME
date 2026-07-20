@@ -97,10 +97,12 @@ class Operateur extends BaseController
         $totalCumule = 0;
         
         foreach ($statsGains as $stat) {
+            $totalLigne = (float) ($stat['total_gains_frais'] ?? 0);
+
             if ($stat['type_operation'] === 'RETRAIT') {
-                $gainsRetrait = $stat['total_gains_frais'];
+                $gainsRetrait += $totalLigne;
             } elseif ($stat['type_operation'] === 'TRANSFERT') {
-                $gainsTransfert = $stat['total_gains_frais'];
+                $gainsTransfert += $totalLigne;
             }
         }
         $totalCumule = $gainsRetrait + $gainsTransfert;
@@ -111,9 +113,11 @@ class Operateur extends BaseController
         $page = $this->request->getVar('page') ?? 1;
         $filter = $this->request->getVar('filter') ?? 'all';
         
-        $query = $historiqueModel->select('historique_transactions.*, types_operations.code as type_code, types_operations.nom as type_nom, cs.numero_telephone as compte_source_numero')
+        $query = $historiqueModel->select("historique_transactions.*, (historique_transactions.frais_bareme + historique_transactions.frais_commission) as frais_percus, types_operations.code as type_code, types_operations.nom as type_nom, cs.numero_telephone as compte_source_numero, COALESCE(historique_transactions.numero_destinataire, cd.numero_telephone) as numero_destinataire_affiche, CASE WHEN types_operations.code != 'TRANSFERT' THEN 'Notre Réseau' WHEN od.est_interne = 1 THEN 'Notre Réseau' WHEN od.nom IS NOT NULL THEN 'Autres Opérateurs (' || od.nom || ')' ELSE 'Opérateur inconnu' END as reseau_concerne")
                                  ->join('types_operations', 'types_operations.id = historique_transactions.type_operation_id')
                                  ->join('comptes_clients cs', 'cs.id = historique_transactions.compte_source_id')
+                                 ->join('comptes_clients cd', 'cd.id = historique_transactions.compte_destination_id', 'left')
+                                 ->join('operateurs od', 'od.id = historique_transactions.operateur_destination_id', 'left')
                                  ->whereIn('types_operations.code', ['RETRAIT', 'TRANSFERT']);
         
         if ($filter !== 'all') {
@@ -195,7 +199,7 @@ class Operateur extends BaseController
         return redirect()->to('/operateur/operations')->with('error', 'Erreur lors de la modification du type d\'opération');
     }
 
-    public function bareme($typeOperationId): string
+    public function bareme($typeOperationId)
     {
         $typeOperationModel = new TypeOperationModel();
         $baremeModel = new BaremeFraisModel();

@@ -12,7 +12,6 @@ class AddReferenceGroupeToHistoriqueTransactions extends Migration
             'reference_groupe' => [
                 'type'       => 'TEXT',
                 'null'       => true,
-                'after'      => 'frais_appliques',
             ],
         ]);
     }

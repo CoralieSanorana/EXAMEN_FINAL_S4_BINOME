@@ -28,4 +28,20 @@ class OperateurPrefixeModel extends Model
         ]
     ];
     protected $skipValidation       = false;
+
+    public function trouverOperateurParNumero(?string $numero): ?array
+    {
+        $numero = preg_replace('/[\s\-\.]/', '', trim((string) $numero));
+        $prefixe = substr($numero, 0, 3);
+
+        if ($prefixe === false || strlen($prefixe) !== 3) {
+            return null;
+        }
+
+        return $this->select('operateur_prefixes.*, operateurs.nom as operateur_nom, operateurs.est_interne')
+            ->join('operateurs', 'operateurs.id = operateur_prefixes.operateur_id')
+            ->where('operateur_prefixes.prefixe', $prefixe)
+            ->where('operateur_prefixes.statut', 'actif')
+            ->first();
+    }
 }

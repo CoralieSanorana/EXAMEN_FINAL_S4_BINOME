@@ -10,15 +10,18 @@ class HistoriqueTransactionModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'compte_destination_id', 'montant', 'frais_appliques', 'reference_groupe'];
+    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'numero_destinataire', 'compte_destination_id', 'operateur_destination_id', 'montant', 'frais_bareme', 'frais_commission', 'reference_groupe'];
 
     protected $validationRules      = [
-        'type_operation_id'     => 'required|integer',
-        'compte_source_id'      => 'required|integer',
-        'compte_destination_id' => 'permit_empty|integer',
-        'montant'               => 'required|numeric|greater_than[0]',
-        'frais_appliques'       => 'required|numeric|greater_than_equal_to[0]',
-        'reference_groupe'      => 'permit_empty|max_length[100]'
+        'type_operation_id'       => 'required|integer',
+        'compte_source_id'        => 'required|integer',
+        'numero_destinataire'     => 'permit_empty|max_length[20]',
+        'compte_destination_id'   => 'permit_empty|integer',
+        'operateur_destination_id'=> 'permit_empty|integer',
+        'montant'                 => 'required|numeric|greater_than[0]',
+        'frais_bareme'            => 'required|numeric|greater_than_equal_to[0]',
+        'frais_commission'        => 'required|numeric|greater_than_equal_to[0]',
+        'reference_groupe'        => 'permit_empty|max_length[100]'
     ];
     protected $skipValidation       = false;
 
@@ -27,7 +30,7 @@ class HistoriqueTransactionModel extends Model
      */
     public function obtenirHistoriqueClient($compteId)
     {
-        return $this->select('historique_transactions.*, types_operations.nom as type_nom, types_operations.code as type_code')
+        return $this->select('historique_transactions.*, (historique_transactions.frais_bareme + historique_transactions.frais_commission) as frais_appliques, types_operations.nom as type_nom, types_operations.code as type_code')
                     ->join('types_operations', 'types_operations.id = historique_transactions.type_operation_id')
                     ->groupStart()
                         ->where('compte_source_id', $compteId)

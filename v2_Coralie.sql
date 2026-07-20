@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS historique_transactions (
     montant REAL NOT NULL,
     frais_bareme REAL NOT NULL DEFAULT 0.0,
     frais_commission REAL NOT NULL DEFAULT 0.0,
+    reference_groupe TEXT NULL,
     effectue_le TEXT DEFAULT (CURRENT_TIMESTAMP),
     FOREIGN KEY (type_operation_id) REFERENCES types_operations(id) ON DELETE RESTRICT,
     FOREIGN KEY (compte_source_id) REFERENCES comptes_clients(id) ON DELETE RESTRICT,

@@ -33,4 +33,15 @@ class ConfigurationCommissionModel extends Model
         ]
     ];
     protected $skipValidation       = false;
+
+    public function trouverConfiguration(?int $operateurSourceId, ?int $operateurDestinationId): ?array
+    {
+        if (empty($operateurSourceId) || empty($operateurDestinationId)) {
+            return null;
+        }
+
+        return $this->where('operateur_source_id', $operateurSourceId)
+            ->where('operateur_destination_id', $operateurDestinationId)
+            ->first();
+    }
 }
