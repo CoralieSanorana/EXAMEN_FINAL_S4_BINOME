@@ -11,19 +11,19 @@
     <div class="col-md-4">
         <div class="mm-stat-card">
             <div class="mm-stat-label">Gains totaux (retrait)</div>
-            <div class="mm-stat-value positive">1 245 800 Ar</div>
+            <div class="mm-stat-value positive"><?= $stats['gains_retrait'] ?> Ar</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="mm-stat-card">
             <div class="mm-stat-label">Gains totaux (transfert)</div>
-            <div class="mm-stat-value accent">832 400 Ar</div>
+            <div class="mm-stat-value accent"><?= $stats['gains_transfert'] ?> Ar</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="mm-stat-card">
             <div class="mm-stat-label">Total cumulé</div>
-            <div class="mm-stat-value">2 078 200 Ar</div>
+            <div class="mm-stat-value"><?= $stats['total_cumule'] ?> Ar</div>
         </div>
     </div>
 </div>
@@ -51,36 +51,31 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>19/07/2026 14:32</td>
-                <td>033 12 345 67</td>
-                <td><span class="badge badge-mm badge-retrait">Retrait</span></td>
-                <td>75 000 Ar</td>
-                <td class="text-end">1 125 Ar</td>
-            </tr>
-            <tr>
-                <td>19/07/2026 11:08</td>
-                <td>037 44 556 78</td>
-                <td><span class="badge badge-mm badge-transfert">Transfert</span></td>
-                <td>150 000 Ar</td>
-                <td class="text-end">2 250 Ar</td>
-            </tr>
-            <tr>
-                <td>18/07/2026 17:45</td>
-                <td>033 98 765 43</td>
-                <td><span class="badge badge-mm badge-retrait">Retrait</span></td>
-                <td>15 000 Ar</td>
-                <td class="text-end">500 Ar</td>
-            </tr>
-            <tr>
-                <td>18/07/2026 09:21</td>
-                <td>037 22 113 90</td>
-                <td><span class="badge badge-mm badge-transfert">Transfert</span></td>
-                <td>320 000 Ar</td>
-                <td class="text-end">4 800 Ar</td>
-            </tr>
+            <?php if (!empty($transactions)): ?>
+                <?php foreach ($transactions as $transaction): ?>
+                    <tr>
+                        <td><?= date('d/m/Y H:i', strtotime($transaction['effectue_le'])) ?></td>
+                        <td><?= $transaction['compte_source_numero'] ?? 'N/A' ?></td>
+                        <td>
+                            <span class="badge badge-mm <?= $transaction['type_code'] === 'RETRAIT' ? 'badge-retrait' : 'badge-transfert' ?>">
+                                <?= $transaction['type_nom'] ?>
+                            </span>
+                        </td>
+                        <td><?= number_format($transaction['montant'], 0, ',', ' ') ?> Ar</td>
+                        <td class="text-end"><?= number_format($transaction['frais_appliques'], 0, ',', ' ') ?> Ar</td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" class="text-center">Aucune transaction trouvée</td>
+                </tr>
+            <?php endif; ?>
         </tbody>
     </table>
+
+    <nav class="d-flex justify-content-end mt-3">
+        <?= $pager ?>
+    </nav>
 </div>
 
 <?= $this->endSection() ?>

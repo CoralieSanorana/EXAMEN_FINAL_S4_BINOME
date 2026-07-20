@@ -7,10 +7,20 @@
     <p>Gérez les opérations disponibles (dépôt, retrait, transfert) et leurs tranches de frais.</p>
 </div>
 
+<?php if (session('success')): ?>
+    <div class="alert alert-success"><?= session('success') ?></div>
+<?php endif; ?>
+
+<?php if (session('error')): ?>
+    <div class="alert alert-danger"><?= session('error') ?></div>
+<?php endif; ?>
+
 <div class="mm-card">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="mm-card-title mb-0"><i class="bi bi-diagram-3"></i> Types d'opérations</div>
-        <a href="#" class="btn btn-mm-primary btn-sm"><i class="bi bi-plus-lg"></i> Nouveau type</a>
+        <button class="btn btn-mm-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTypeModal">
+            <i class="bi bi-plus-lg"></i> Nouveau type
+        </button>
     </div>
 
     <table class="table mm-table">
@@ -23,110 +33,102 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><span class="badge badge-mm badge-depot">Dépôt</span></td>
-                <td>Alimentation du compte client (gratuit)</td>
-                <td><span class="badge badge-mm badge-depot">Actif</span></td>
-                <td class="text-end"><a href="#" class="btn btn-mm-outline btn-sm"><i class="bi bi-pencil"></i></a></td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-mm badge-retrait">Retrait</span></td>
-                <td>Sortie d'argent avec frais applicables</td>
-                <td><span class="badge badge-mm badge-depot">Actif</span></td>
-                <td class="text-end"><a href="#" class="btn btn-mm-outline btn-sm"><i class="bi bi-pencil"></i></a></td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-mm badge-transfert">Transfert</span></td>
-                <td>Envoi vers un autre numéro avec frais applicables</td>
-                <td><span class="badge badge-mm badge-depot">Actif</span></td>
-                <td class="text-end"><a href="#" class="btn btn-mm-outline btn-sm"><i class="bi bi-pencil"></i></a></td>
-            </tr>
+            <?php if (!empty($types_operations)): ?>
+                <?php foreach ($types_operations as $type): ?>
+                    <tr>
+                        <td>
+                            <span class="badge badge-mm 
+                                <?= $type['code'] === 'DEPOT' ? 'badge-depot' : ($type['code'] === 'RETRAIT' ? 'badge-retrait' : 'badge-transfert') ?>">
+                                <?= $type['code'] ?>
+                            </span>
+                        </td>
+                        <td><?= $type['nom'] ?></td>
+                        <td><span class="badge badge-mm badge-depot">Actif</span></td>
+                        <td class="text-end">
+                            <button class="btn btn-mm-outline btn-sm" onclick="editTypeOperation(<?= $type['id'] ?>, '<?= $type['code'] ?>', '<?= $type['nom'] ?>')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <a href="<?= base_url('operateur/bareme/' . $type['id']) ?>" class="btn btn-mm-primary btn-sm">
+                                <i class="bi bi-eye"></i> Voir barème
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="4" class="text-center">Aucun type d'opération trouvé</td>
+                </tr>
+            <?php endif; ?>
         </tbody>
     </table>
 </div>
 
-<div class="row">
-    <div class="col-lg-7">
-        <div class="mm-card">
-            <div class="mm-card-title"><i class="bi bi-layers"></i> Barème de frais &mdash; Retrait</div>
-
-            <table class="table mm-table">
-                <thead>
-                    <tr>
-                        <th>Tranche (Ar)</th>
-                        <th>Frais fixe</th>
-                        <th>Frais %</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>0 &ndash; 10 000</td>
-                        <td>200 Ar</td>
-                        <td>&mdash;</td>
-                        <td class="text-end"><a href="#" class="btn btn-mm-outline btn-sm"><i class="bi bi-pencil"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>10 001 &ndash; 50 000</td>
-                        <td>500 Ar</td>
-                        <td>&mdash;</td>
-                        <td class="text-end"><a href="#" class="btn btn-mm-outline btn-sm"><i class="bi bi-pencil"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>50 001 &ndash; 200 000</td>
-                        <td>&mdash;</td>
-                        <td>1,5 %</td>
-                        <td class="text-end"><a href="#" class="btn btn-mm-outline btn-sm"><i class="bi bi-pencil"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>&gt; 200 000</td>
-                        <td>&mdash;</td>
-                        <td>2 %</td>
-                        <td class="text-end"><a href="#" class="btn btn-mm-outline btn-sm"><i class="bi bi-pencil"></i></a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="col-lg-5">
-        <div class="mm-card">
-            <div class="mm-card-title"><i class="bi bi-plus-circle"></i> Ajouter une tranche</div>
-
-            <form>
-                <div class="mb-3">
-                    <label class="form-label">Type d'opération</label>
-                    <select class="form-select">
-                        <option>Retrait</option>
-                        <option>Transfert</option>
-                    </select>
-                </div>
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <label class="form-label">Montant min (Ar)</label>
-                        <input type="number" class="form-control" placeholder="0">
+<!-- Modal pour ajouter un type d'opération -->
+<div class="modal fade" id="addTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un type d'opération</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="<?= base_url('operateur/addTypeOperation') ?>" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Code</label>
+                        <input type="text" name="code" class="form-control" placeholder="DEPOT, RETRAIT, TRANSFERT" required>
                     </div>
-                    <div class="col-6 mb-3">
-                        <label class="form-label">Montant max (Ar)</label>
-                        <input type="number" class="form-control" placeholder="10000">
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input type="text" name="nom" class="form-control" placeholder="Dépôt, Retrait, Transfert" required>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <label class="form-label">Frais fixe (Ar)</label>
-                        <input type="number" class="form-control" placeholder="200">
-                    </div>
-                    <div class="col-6 mb-4">
-                        <label class="form-label">Frais (%)</label>
-                        <input type="number" step="0.1" class="form-control" placeholder="0">
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-mm-primary">Enregistrer</button>
                 </div>
-                <button type="submit" class="btn btn-mm-primary w-100">
-                    <i class="bi bi-check-lg"></i> Enregistrer la tranche
-                </button>
             </form>
         </div>
     </div>
 </div>
+
+<!-- Modal pour modifier un type d'opération -->
+<div class="modal fade" id="editTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier le type d'opération</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="" method="post" id="editTypeForm">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editTypeId">
+                    <div class="mb-3">
+                        <label class="form-label">Code</label>
+                        <input type="text" name="code" id="editTypeCode" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input type="text" name="nom" id="editTypeNom" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-mm-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function editTypeOperation(id, code, nom) {
+    document.getElementById('editTypeId').value = id;
+    document.getElementById('editTypeCode').value = code;
+    document.getElementById('editTypeNom').value = nom;
+    document.getElementById('editTypeForm').action = '<?= base_url('operateur/editTypeOperation/') ?>' + id;
+    var modal = new bootstrap.Modal(document.getElementById('editTypeModal'));
+    modal.show();
+}
+</script>
 
 <?= $this->endSection() ?>

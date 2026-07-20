@@ -36,15 +36,29 @@
 
 **Funaki ETU004169**
 - [] Coté Opérateur (Back-office)
-    - [] Login operateur
-        - [] Formulaire de login avec champs:
+    - [ok] Login operateur
+        - [ok] Formulaire de login avec champs:
             - Nom d'utilisateur
             - Mot de passe
             - Bouton "Se connecter"
+        - [ok] Fonction athenticate() dans controller Operateur
+            - redirect vers 'operateur/comptes' si login réussi
+            - redirect vers 'operateur/login' si login échoué
+
     - [] Interface de configuration des préfixes valides de l'opérateur
+        - [] Recuperer la liste des préfixes
+        - [] Affichage des prefixes avec boutons (modifier & supprimer)
+        - [] Formulaire d'ajout d'un nouveau prefixe
+
     - [] Interface de gestion et modification du barème de frais par tranche de montant
+        - [] Recuperer la liste des barèmes
+        - [] Affichage avec pagination
+
     - [] Page de situation des gains générés via les frais (retraits et transferts)
-    - [] Page de situation globale et consultation des comptes clients
+
+     - [ok] Page de situation globale et consultation des comptes clients
+        - [ok] Recuperer la liste des clients
+        - [ok] Affichage de la liste avec pagination
 
 **Coralie ETU004250**
 - [] Coté Client (Interface Mobile)

@@ -11,10 +11,10 @@
 
         <div class="mm-user-chip">
             <span class="avatar">OP</span>
-            <span>Compte Opérateur</span>
+            <span><?= session('operateur_name'); ?> - <?= session('operateur_email'); ?></span>
         </div>
 
-        <a href="#" class="btn btn-mm-outline btn-sm">
+        <a href="<?= base_url('operateur/logout'); ?>" class="btn btn-mm-outline btn-sm">
             <i class="bi bi-box-arrow-right"></i> Déconnexion
         </a>
     </div>

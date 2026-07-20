@@ -11,19 +11,19 @@
     <div class="col-md-4">
         <div class="mm-stat-card">
             <div class="mm-stat-label">Nombre de comptes</div>
-            <div class="mm-stat-value">1 284</div>
+            <div class="mm-stat-value"><?= $stats['nombre_comptes'] ?></div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="mm-stat-card">
             <div class="mm-stat-label">Solde total cumulé</div>
-            <div class="mm-stat-value accent">184 320 500 Ar</div>
+            <div class="mm-stat-value accent"><?= $stats['solde_total'] ?> Ar</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="mm-stat-card">
             <div class="mm-stat-label">Solde moyen / compte</div>
-            <div class="mm-stat-value">143 550 Ar</div>
+            <div class="mm-stat-value"><?= $stats['solde_moyen'] ?> Ar</div>
         </div>
     </div>
 </div>
@@ -31,10 +31,10 @@
 <div class="mm-card">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="mm-card-title mb-0"><i class="bi bi-people"></i> Liste des comptes</div>
-        <div class="input-group" style="max-width:280px;">
+        <form action="<?= base_url('operateur/comptes') ?>" method="get" class="input-group" style="max-width:280px;">
             <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control" placeholder="Rechercher un numéro...">
-        </div>
+            <input type="text" name="search" class="form-control" placeholder="Rechercher un numéro..." value="<?= esc($search ?? '') ?>">
+        </form>
     </div>
 
     <table class="table mm-table">
@@ -48,45 +48,28 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><strong>033 12 345 67</strong></td>
-                <td>Orange Madagascar</td>
-                <td>02/01/2026</td>
-                <td class="text-end">452 300 Ar</td>
-                <td class="text-end"><span class="badge badge-mm badge-depot">Actif</span></td>
-            </tr>
-            <tr>
-                <td><strong>037 44 556 78</strong></td>
-                <td>Airtel Madagascar</td>
-                <td>15/01/2026</td>
-                <td class="text-end">98 000 Ar</td>
-                <td class="text-end"><span class="badge badge-mm badge-depot">Actif</span></td>
-            </tr>
-            <tr>
-                <td><strong>033 98 765 43</strong></td>
-                <td>Orange Madagascar</td>
-                <td>03/02/2026</td>
-                <td class="text-end">1 250 000 Ar</td>
-                <td class="text-end"><span class="badge badge-mm badge-depot">Actif</span></td>
-            </tr>
-            <tr>
-                <td><strong>037 22 113 90</strong></td>
-                <td>Airtel Madagascar</td>
-                <td>21/02/2026</td>
-                <td class="text-end">0 Ar</td>
-                <td class="text-end"><span class="badge badge-mm badge-retrait">Suspendu</span></td>
-            </tr>
+            <?php if (!empty($comptes)): ?>
+                <?php foreach ($comptes as $compte): ?>
+                    <tr>
+                        <td><strong><?= $compte['numero_telephone'] ?></strong></td>
+                        <td>Opérateur</td>
+                        <td><?= date('d/m/Y', strtotime($compte['cree_le'] ?? 'now')) ?></td>
+                        <td class="text-end"><?= number_format($compte['solde'], 0, ',', ' ') ?> Ar</td>
+                        <td class="text-end">
+                            <span class="badge badge-mm badge-depot">Actif</span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" class="text-center">Aucun compte trouvé</td>
+                </tr>
+            <?php endif; ?>
         </tbody>
     </table>
 
     <nav class="d-flex justify-content-end mt-3">
-        <ul class="pagination pagination-sm mb-0">
-            <li class="page-item disabled"><a class="page-link" href="#">Précédent</a></li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
-        </ul>
+        <?= $pager ?>
     </nav>
 </div>
 

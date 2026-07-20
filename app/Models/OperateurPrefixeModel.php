@@ -10,11 +10,13 @@ class OperateurPrefixeModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['prefixe'];
+    protected $allowedFields    = ['prefixe', 'libelle', 'statut'];
 
     // Règles de validation strictes (3 chiffres exactement)
     protected $validationRules      = [
-        'prefixe' => 'required|exact_length[3]|numeric|is_unique[operateur_prefixes.prefixe]'
+        'prefixe' => 'required|exact_length[3]|numeric|is_unique[operateur_prefixes.prefixe]',
+        'libelle' => 'required|min_length[3]',
+        'statut'  => 'required|in_list[actif,inactif]'
     ];
     
     protected $validationMessages   = [
