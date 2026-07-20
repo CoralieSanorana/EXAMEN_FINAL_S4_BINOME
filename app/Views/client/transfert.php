@@ -13,6 +13,89 @@ if (!is_array($oldDestinataires) || empty(array_filter($oldDestinataires, static
 <?= $this->section('content') ?>
 
 <style>
+    /* ===================== THEME BLEU MARINE ===================== */
+    :root {
+        --marine-900: #071B33; /* le plus foncé */
+        --marine-800: #0B2545;
+        --marine-700: #13315C;
+        --marine-600: #1B3A6B;
+        --marine-500: #2C5F8A; /* accent / hover */
+        --marine-100: #E9F0F8; /* teinte claire pour fonds */
+    }
+
+    /* Boutons pleins (Confirmer, etc.) */
+    .btn-primary {
+        background-color: var(--marine-800);
+        border-color: var(--marine-800);
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: var(--marine-600) !important;
+        border-color: var(--marine-600) !important;
+    }
+    .btn-primary:disabled {
+        background-color: var(--marine-700);
+        border-color: var(--marine-700);
+        opacity: 0.6;
+    }
+
+    /* Boutons contour (Ajouter un numéro, Ajouter après) */
+    .btn-outline-primary {
+        color: var(--marine-800);
+        border-color: var(--marine-800);
+    }
+    .btn-outline-primary:hover,
+    .btn-outline-primary:active {
+        background-color: var(--marine-800) !important;
+        border-color: var(--marine-800) !important;
+        color: #fff !important;
+    }
+
+    /* Textes et icônes en bleu */
+    .text-primary {
+        color: var(--marine-800) !important;
+    }
+
+    /* Fonds bleus (ex: "Ar" à côté du montant) */
+    .bg-primary {
+        background-color: var(--marine-800) !important;
+    }
+
+    /* Badges opérateur détecté */
+    .badge.bg-primary {
+        background-color: var(--marine-700) !important;
+    }
+
+    /* Bordures bleues éventuelles */
+    .border-primary {
+        border-color: var(--marine-800) !important;
+    }
+
+    /* Alerte info (vérification en cours) réharmonisée en bleu marine clair */
+    .alert-info,
+    .bg-info-subtle {
+        background-color: var(--marine-100) !important;
+        border-color: var(--marine-600) !important;
+        color: var(--marine-800) !important;
+    }
+    .text-info-emphasis {
+        color: var(--marine-800) !important;
+    }
+    .border-info-subtle {
+        border-color: var(--marine-600) !important;
+    }
+
+    /* Spinner en bleu marine */
+    .spinner-border {
+        color: var(--marine-700);
+    }
+
+    /* Titre de page : liseré bleu marine subtil */
+    .mm-page-header h1 {
+        color: var(--marine-900);
+    }
+
     /* Permet de donner au conteneur client le même rendu et la même hauteur parfaite qu'un input Bootstrap */
     .input-like-badge {
         height: 38px;
@@ -51,7 +134,7 @@ if (!is_array($oldDestinataires) || empty(array_filter($oldDestinataires, static
 
             <form action="/client/processTransfert" method="post" id="transfertForm">
                 <?= csrf_field() ?>
-                
+
                 <!-- Émetteur -->
                 <div class="mb-4">
                     <label class="form-label fw-semibold small text-uppercase text-muted">Numéro émetteur</label>
@@ -75,11 +158,11 @@ if (!is_array($oldDestinataires) || empty(array_filter($oldDestinataires, static
                         <?php foreach ($oldDestinataires as $index => $numero): ?>
                             <div class="destinataire-row p-3 border rounded bg-light bg-opacity-50" data-index="<?= $index ?>">
                                 <div class="row g-3 align-items-center">
-                                    
+
                                     <!-- Index & Numéro -->
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <span class="input-group-text fw-bold text-muted bg-white">#<?= $index + 1 ?></span>
+                                            <span class="input-group-text fw-bold text-muted bg-white destinataire-index">#<?= $index + 1 ?></span>
                                             <span class="input-group-text bg-white border-start-0"><i class="bi bi-phone text-muted"></i></span>
                                             <input
                                                 type="text"
@@ -90,14 +173,14 @@ if (!is_array($oldDestinataires) || empty(array_filter($oldDestinataires, static
                                             >
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Identité Client (Alignée symétriquement au champ de saisie) -->
                                     <div class="col-md-4">
                                         <div class="destinataire-client input-like-badge border rounded px-3 bg-white text-muted shadow-sm">
                                             <i class="bi bi-search me-2 text-black-50 small"></i> En attente...
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Actions (Alignées verticalement) -->
                                     <div class="col-md-2 text-end">
                                         <div class="btn-group w-100" role="group">
@@ -114,7 +197,7 @@ if (!is_array($oldDestinataires) || empty(array_filter($oldDestinataires, static
                     <div class="form-text mt-2 text-muted">
                         <i class="bi bi-info-circle"></i> Tous les numéros saisis doivent obligatoirement appartenir au même opérateur pour valider l'envoi multiple.
                     </div>
-                    
+
                     <div id="destinatairesInfo" class="mt-3" style="display:none;">
                         <div class="alert alert-success py-2 px-3 mb-0">
                             <div class="fw-semibold"><i class="bi bi-people-fill"></i> <span id="destinatairesResume"></span></div>
@@ -165,7 +248,7 @@ if (!is_array($oldDestinataires) || empty(array_filter($oldDestinataires, static
             <div class="mm-card-title h5 mb-4 d-flex align-items-center gap-2">
                 <i class="bi bi-receipt text-secondary"></i> Résumé des frais
             </div>
-            
+
             <ul class="list-unstyled mb-0 d-flex flex-column gap-1" style="font-size: 0.95rem;">
                 <li class="d-flex justify-content-between py-2 border-bottom">
                     <span class="text-muted">Solde actuel</span>

@@ -98,40 +98,43 @@ document.addEventListener('DOMContentLoaded', function() {
         return Array.from(destinatairesContainer.querySelectorAll('.destinataire-row'));
     }
 
+    // Génère une nouvelle ligne avec EXACTEMENT le même markup que celui rendu par le PHP
     function creerLigne(numero = '') {
         const row = document.createElement('div');
-        row.className = 'card shadow-sm mb-3 destinataire-row border-light';
+        row.className = 'destinataire-row p-3 border rounded bg-light bg-opacity-50';
         row.innerHTML = `
-            <div class="card-body p-3">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <label class="form-label small fw-bold text-secondary mb-2">
-                            <i class="bi bi-person-fill text-primary me-1"></i> Destinataire N°
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 text-muted">
-                                <i class="bi bi-telephone-plus"></i>
-                            </span>
-                            <input type="text" name="numero_destinataires[]" class="form-control destinataire-input border-start-0 ps-0" placeholder="Ex : 0341234567" value="${numero}">
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <label class="form-label small fw-bold text-secondary mb-2">Identité du client</label>
-                        <div class="destinataire-client small d-flex align-items-center bg-light text-muted border rounded px-3" style="height: 38px;">
-                            <i class="bi bi-hourglass-split me-2"></i>En attente de saisie...
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="d-flex gap-2 justify-content-end">
-                            <button type="button" class="btn btn-outline-primary btn-sm add-row-btn w-50" style="height: 38px;" title="Ajouter un destinataire">
-                                <i class="bi bi-plus-lg"></i>
-                            </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn w-50" style="height: 38px;" title="Supprimer">
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                        </div>
+            <div class="row g-3 align-items-center">
+
+                <!-- Index & Numéro -->
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text fw-bold text-muted bg-white destinataire-index">#</span>
+                        <span class="input-group-text bg-white border-start-0"><i class="bi bi-phone text-muted"></i></span>
+                        <input
+                            type="text"
+                            name="numero_destinataires[]"
+                            class="form-control destinataire-input"
+                            placeholder="Ex : 0341234567"
+                            value="${numero}"
+                        >
                     </div>
                 </div>
+
+                <!-- Identité Client (Alignée symétriquement au champ de saisie) -->
+                <div class="col-md-4">
+                    <div class="destinataire-client input-like-badge border rounded px-3 bg-white text-muted shadow-sm">
+                        <i class="bi bi-search me-2 text-black-50 small"></i> En attente...
+                    </div>
+                </div>
+
+                <!-- Actions (Alignées verticalement) -->
+                <div class="col-md-2 text-end">
+                    <div class="btn-group w-100" role="group">
+                        <button type="button" class="btn btn-outline-secondary btn-sm add-row-btn" title="Ajouter après"><i class="bi bi-plus-lg"></i></button>
+                        <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn" title="Supprimer"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+
             </div>
         `;
         destinatairesContainer.appendChild(row);
@@ -142,9 +145,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renumeroterLignes() {
         getRows().forEach((row, index) => {
-            const label = row.querySelector('.col-md-5 .form-label');
-            if (label) {
-                label.innerHTML = `<i class="bi bi-person-fill text-primary me-1"></i> Destinataire N°${index + 1}`;
+            row.dataset.index = index;
+            const badge = row.querySelector('.destinataire-index');
+            if (badge) {
+                badge.textContent = `#${index + 1}`;
             }
         });
 
@@ -165,13 +169,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return normaliserNumero(input ? input.value : '');
     }
 
+    // Base identique au markup PHP (bg-white text-muted shadow-sm), déclinée selon l'état
     function setClientInfo(row, message, type = 'muted') {
         const box = row.querySelector('.destinataire-client');
         if (!box) return;
 
         row.dataset.lookupState = type;
-        box.className = 'destinataire-client small d-flex align-items-center border rounded px-3';
-        box.style.height = '38px';
+        box.className = 'destinataire-client input-like-badge border rounded px-3';
 
         if (type === 'success') {
             box.classList.add('bg-success-subtle', 'border-success-subtle', 'text-success', 'fw-semibold');
@@ -183,8 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
             box.classList.add('bg-info-subtle', 'border-info-subtle', 'text-info-emphasis');
             box.innerHTML = `<div class="spinner-border spinner-border-sm me-2" role="status"></div> ${message}`;
         } else {
-            box.classList.add('bg-light', 'text-muted');
-            box.innerHTML = `<i class="bi bi-hourglass-split me-2"></i> ${message}`;
+            box.classList.add('bg-white', 'text-muted', 'shadow-sm');
+            box.innerHTML = `<i class="bi bi-search me-2 text-black-50 small"></i> ${message}`;
         }
     }
 
@@ -423,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const regexNumero = /^[0-9]{8,10}$/;
 
         if (!numero) {
-            setClientInfo(row, 'En attente de saisie...', 'muted');
+            setClientInfo(row, 'En attente...', 'muted');
             mettreAJourResume();
             return;
         }
@@ -517,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (seulInput) {
                         seulInput.value = '';
                     }
-                    setClientInfo(row, 'En attente de saisie...', 'muted');
+                    setClientInfo(row, 'En attente...', 'muted');
                 } else {
                     row.remove();
                     renumeroterLignes();
