@@ -163,6 +163,7 @@ $pager = $pager ?? '';
                     <th>Montant</th>
                     <th class="text-end">Frais barème</th>
                     <th class="text-end">Commission</th>
+                    <th class="text-end">Reduction</th>
                     <th class="text-end">Total frais</th>
                 </tr>
             </thead>
@@ -182,6 +183,7 @@ $pager = $pager ?? '';
                             <td><?= number_format($transaction['montant'], 2, ',', ' ') ?> Ar</td>
                             <td class="text-end"><?= number_format($transaction['frais_bareme'] ?? 0, 2, ',', ' ') ?> Ar</td>
                             <td class="text-end"><?= number_format($transaction['frais_commission'] ?? 0, 2, ',', ' ') ?> Ar</td>
+                            <td class="text-end"><?= number_format($transaction['reduction'] ?? 0, 2, ',', ' ') ?> Ar</td>
                             <td class="text-end"><?= number_format($transaction['frais_percus'] ?? 0, 2, ',', ' ') ?> Ar</td>
                         </tr>
                     <?php endforeach; ?>

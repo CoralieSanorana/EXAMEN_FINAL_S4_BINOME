@@ -245,3 +245,10 @@
 
 
 - [ok] Corriger la fonction qui insert un nouvel historique_transaction
+
+# Alea 1
+Commission de reduction en % de frais de transfert de meme operateur
+- [] table 'commission_reduction'
+- [] cree model de la nouvelle table
+- [] appliquer la reduction lors du transfert vers meme operateur (Client.php controller)
+- [] verification resultat

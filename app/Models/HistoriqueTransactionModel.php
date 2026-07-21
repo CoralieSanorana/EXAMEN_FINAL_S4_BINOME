@@ -10,7 +10,7 @@ class HistoriqueTransactionModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'numero_destinataire', 'compte_destination_id', 'operateur_destination_id', 'montant', 'frais_bareme', 'frais_commission', 'reference_groupe'];
+    protected $allowedFields    = ['type_operation_id', 'compte_source_id', 'numero_destinataire', 'compte_destination_id', 'operateur_destination_id', 'montant', 'frais_bareme', 'frais_commission', 'reference_groupe','reduction'];
 
     protected $validationRules      = [
         'type_operation_id'       => 'required|integer',
@@ -74,7 +74,7 @@ class HistoriqueTransactionModel extends Model
         ];
 
         $internes = $db->table('historique_transactions h')
-            ->select('t.code AS type_operation, SUM(h.frais_bareme) AS total_bareme')
+            ->select('t.code AS type_operation, SUM(h.frais_bareme) AS total_bareme, SUM(h.reduction) AS total_reduction')
             ->join('types_operations t', 't.id = h.type_operation_id')
             ->join('comptes_clients cs', 'cs.id = h.compte_source_id')
             ->join('operateur_prefixes ops', "ops.prefixe = substr(cs.numero_telephone, 1, 3) AND ops.statut = 'actif'", 'left')

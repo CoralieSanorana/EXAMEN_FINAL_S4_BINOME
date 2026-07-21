@@ -8,6 +8,7 @@ use App\Models\TypeOperationModel;
 use App\Models\BaremeFraisModel;
 use App\Models\OperateurPrefixeModel;
 use App\Models\ConfigurationCommissionModel;
+use App\Models\CommissionReductionModel;
 
 class Client extends BaseController
 {
@@ -18,6 +19,8 @@ class Client extends BaseController
     protected $baremeFraisModel;
     protected $operateurPrefixeModel;
     protected $configurationCommissionModel;
+    protected $commissionReductionModel;
+
 
     public function __construct()
     {
@@ -28,6 +31,7 @@ class Client extends BaseController
         $this->baremeFraisModel = new BaremeFraisModel();
         $this->operateurPrefixeModel = new OperateurPrefixeModel();
         $this->configurationCommissionModel = new ConfigurationCommissionModel();
+        $this->commissionReductionModel = new CommissionReductionModel();
     }
 
     public function index()
@@ -527,6 +531,7 @@ class Client extends BaseController
         $totalMontantTransfere = 0.0;
         $totalFraisTransfert = 0.0;
         $totalFraisCommission = 0.0;
+        $totalFraisReduction = 0.0;
         $totalDebit = 0.0;
 
         /*foreach ($numerosUniques as $numero) {
@@ -565,6 +570,7 @@ class Client extends BaseController
             $totalMontantTransfere += $detail['montant_transfert'];
             $totalFraisTransfert += $detail['frais_transfert'];
             $totalFraisCommission += $detail['frais_commission'];
+            $totalFraisReduction += $detail['reduction'];
             $totalDebit += $detail['total_debit'];
         }
 
@@ -599,6 +605,7 @@ class Client extends BaseController
                     'montant' => $detail['montant_transfert'],
                     'frais_bareme' => $detail['frais_transfert'],
                     'frais_commission' => $detail['frais_commission'],
+                    'reduction'=> $detail['reduction'],
                     'reference_groupe' => $referenceGroupe,
                 ])) {
                     throw new \RuntimeException('Impossible d\'enregistrer l\'historique du transfert');
@@ -719,6 +726,24 @@ class Client extends BaseController
             }
         }
 
+        // Appliquer commission de reduction
+        $fraisReduction = 0; 
+        if ($operateurEmetteurId !== null && $operateurDestinationId !== null) {
+            // Si l'opérateur du destinataire est différent de celui de l'émetteur
+            if ($operateurEmetteurId == $operateurDestinationId) {
+                // Recherche de la reduction correspondante dans la table
+                $reduction = $this->commissionReductionModel->trouverReduction($operateurEmetteurId);
+                
+                if ($reduction) {
+                    $pourcentage = (float) $reduction['pourcentage_reduction'];
+                    // Formule demandée : (frais_bareme * commission) / 100
+                    $fraisReduction = ($fraisTransfert * $pourcentage) / 100;
+                }
+            }
+        }
+        
+        $total = $montantTransfert + $fraisTransfert + $fraisCommission - $fraisReduction;
+
         return [
             'montant_base' => $montantBase,
             'frais_retrait' => $fraisRetraitTheorique,
@@ -726,7 +751,8 @@ class Client extends BaseController
             'frais_transfert' => $fraisTransfert,
             'frais_commission' => $fraisCommission,
             'operateur_destination_id' => $operateurDestinationId,
-            'total_debit' => $montantTransfert + $fraisTransfert + $fraisCommission,
+            'reduction'=> $fraisReduction,
+            'total_debit' => $total,
         ];
     }
 
