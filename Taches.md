@@ -252,3 +252,13 @@ Commission de reduction en % de frais de transfert de meme operateur
 - [] cree model de la nouvelle table
 - [] appliquer la reduction lors du transfert vers meme operateur (Client.php controller)
 - [] verification resultat
+
+# Alea 2 
+Creation d'une epargne pour chaque client 
+- [] creation de table 'epargnes'
+- [] creation du model epargnes 
+- [] creation du function d'insertion de l'epargnes 
+- [] Ajouter la page  pour inserer une epargne
+- [] creer la routes vers la page 
+- [] Ajouter le lients dans le sidebar vers la pages
+- [] Ajoutrer la condition dans process transfert pour separer l'argent 

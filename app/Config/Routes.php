@@ -28,6 +28,8 @@ $routes->group('client', function($routes) {
     $routes->get('historique', 'Client::historique', ['filter' => 'auth']);
     $routes->get('profil', 'Client::profil', ['filter' => 'auth']);
     $routes->post('updateProfil', 'Client::updateProfil', ['filter' => 'auth']);
+    $routes->get('epargnes', 'Client::epargnes', ['filter' => 'auth']);
+    
 });
 
 // Operateur routes - grouped

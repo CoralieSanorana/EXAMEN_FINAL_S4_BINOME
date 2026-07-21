@@ -451,3 +451,11 @@ SELECT
 FROM historique_transactions h
 JOIN comptes_clients c_source ON h.compte_source_id = c_source.id
 WHERE h.compte_destination_id IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS epargnes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_clients INTEGER NOT NULL, 
+    pourcentage DECIMAL(10,2),
+    FOREIGN KEY ( id_clients) REFERENCES comptes_clients(id) ON DELETE RESTRICT
+);
+insert into  epargnes (id_clients,pourcentage) values (1,10 );

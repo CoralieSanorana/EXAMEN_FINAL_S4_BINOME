@@ -9,6 +9,7 @@ use App\Models\BaremeFraisModel;
 use App\Models\OperateurPrefixeModel;
 use App\Models\ConfigurationCommissionModel;
 use App\Models\CommissionReductionModel;
+use App\Models\EpargnesModel;
 
 class Client extends BaseController
 {
@@ -33,7 +34,33 @@ class Client extends BaseController
         $this->configurationCommissionModel = new ConfigurationCommissionModel();
         $this->commissionReductionModel = new CommissionReductionModel();
     }
+    public function epargnes()
+    {
+        $this->checkAuth();
+        $id_client = $this->session->get('client_id');
+        $model = new EpargnesModel();
+        $data['epargnes'] = $model->where('id_clients', $id_client);
+        return view('client/epargens',$data);
+    }
+    public function InsertEpargnes()
+    {
+         
+        $this->checkAuth();
+        $clientId = $this->session->get('client_id');
+        $epargnes = $this->request->getPost('epargnes');
+        // regarder si il y a deja un epargne
+        $epargnesModel = new EpargnesModel();
+ 
+        if ($epargnesModel->find()->where('', $clientId)->count() > 0) {
+            $epargnesModel->where('id_clients', $clientId)->update(['pourcentage'=>$epargnes]);
+        } else { 
+            $epargnesModel->insert(['id_clients'=>$clientId,
+            'pourcentage'=>$epargnes]);
+        }
+    return redirect()->to('/client/pargens');
 
+
+    }
     public function index()
     {
         // Redirect to login as default

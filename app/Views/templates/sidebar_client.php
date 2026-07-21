@@ -20,6 +20,9 @@
         <a class="nav-link <?= uri_string() === 'client/transfert' ? 'active' : '' ?>" href="/client/transfert">
             <i class="bi bi-arrow-left-right"></i> Transfert
         </a>
+         <a class="nav-link <?= uri_string() === 'client/epargnes' ? 'active' : '' ?>" href="/client/epargnes">
+            <i class="bi bi-arrow-left-right"></i> Epargne
+        </a>
     </nav>
 
     <div class="mm-nav-title">Compte</div>

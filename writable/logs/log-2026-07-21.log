@@ -78,3 +78,262 @@ DEBUG - 2026-07-21 07:35:09 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-07-21 07:35:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-07-21 07:35:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-07-21 07:42:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-21 08:14:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-21 08:14:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-21 08:14:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-21 08:14:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-21 08:14:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-21 08:14:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:14:57 --> Error: Call to a member function where() on array
+[Method: GET, Route: client/epargnes]
+in APPPATH\Controllers\Client.php on line 40.
+ 1 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 2 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 3 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:15:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:15:48 --> Error: Call to a member function where() on array
+[Method: GET, Route: client/epargnes]
+in APPPATH\Controllers\Client.php on line 40.
+ 1 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 2 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 3 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:17:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:17:26 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:18:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:18:32 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:19:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:19:18 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:19:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-21 08:19:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:19:28 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:20:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:20:13 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:20:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:20:13 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:20:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:20:14 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:21:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:21:02 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:21:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:21:03 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:22:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:22:03 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:22:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:22:03 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:22:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:22:32 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:22:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:22:32 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/Epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/Epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/Epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(42): view('client/Epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:24:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:24:13 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(43): view('client/epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:24:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:24:13 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(43): view('client/epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:24:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:24:41 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(43): view('client/epargnes', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:25:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:25:02 --> ErrorException: Undefined variable $data
+[Method: GET, Route: client/epargnes]
+in APPPATH\Controllers\Client.php on line 43.
+ 1 APPPATH\Controllers\Client.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $data', 'D:\\EXAMEN FINALE\\EXAMEN_FINAL_S4_BINOME\\app\\Controllers\\Client.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 3 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:25:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-21 08:25:16 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "client/epargnes.php"
+[Method: GET, Route: client/epargnes]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('client/epargnes.php')
+ 2 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('client/epargnes', [], true)
+ 3 APPPATH\Controllers\Client.php(43): view('client/epargnes')
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->epargnes()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-07-21 08:26:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
