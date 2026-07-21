@@ -93,7 +93,7 @@ SELECT
     SUM(h.frais_appliques) AS total_gains_frais
 FROM historique_transactions h
 JOIN types_operations t ON h.type_operation_id = t.id
-GROUP Clyde t.code;
+GROUP BY t.code;
 
 -- ----------------------------------------------------------------------------
 -- 8. VUE : HISTORIQUE UNIFIÉ DES CLIENTS (AVEC LES GESTIONS DES SIGNES + ET -)

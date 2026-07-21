@@ -114,16 +114,16 @@ class Operateur extends BaseController
         $data = [
             'stats' => [
                 'interne' => [
-                    'retrait' => number_format($gainsSepares['interne']['retrait'], 0, ',', ' '),
-                    'transfert' => number_format($gainsSepares['interne']['transfert'], 0, ',', ' '),
-                    'total' => number_format($gainsSepares['interne']['total'], 0, ',', ' ')
+                    'retrait' => number_format($gainsSepares['interne']['retrait'], 2, ',', ' '),
+                    'transfert' => number_format($gainsSepares['interne']['transfert'], 2, ',', ' '),
+                    'total' => number_format($gainsSepares['interne']['total'], 2, ',', ' ')
                 ],
                 'externe' => [
-                    'transfert' => number_format($gainsSepares['externe']['transfert'], 0, ',', ' '),
-                    'total' => number_format($gainsSepares['externe']['total'], 0, ',', ' '),
+                    'transfert' => number_format($gainsSepares['externe']['transfert'], 2, ',', ' '),
+                    'total' => number_format($gainsSepares['externe']['total'], 2, ',', ' '),
                     'details' => $gainsSepares['externe']['details']
                 ],
-                'total_cumule' => number_format($gainsSepares['interne']['total'] + $gainsSepares['externe']['total'], 0, ',', ' ')
+                'total_cumule' => number_format($gainsSepares['interne']['total'] + $gainsSepares['externe']['total'], 2, ',', ' ')
             ],
             'transactions' => $transactions,
             'pager' => $pagerLinks,
