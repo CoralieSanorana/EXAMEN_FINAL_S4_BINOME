@@ -2,20 +2,24 @@
 
 <?php
 $stats = $stats ?? [
-    'gains_retrait' => '0',
-    'gains_transfert' => '0',
+    'interne' => ['total' => '0', 'retrait' => '0', 'transfert' => '0'],
+    'externe' => ['total' => '0', 'transfert' => '0', 'details' => []],
     'total_cumule' => '0',
 ];
 $filter = $filter ?? 'all';
+$period = $period ?? 'month';
 $transactions = $transactions ?? [];
 $pager = $pager ?? '';
 ?>
 
 <?= $this->section('content') ?>
 
-<div class="mm-page-header">
-    <h1>Situation des gains</h1>
-    <p>Vue d'ensemble des revenus générés par les frais de barème et les commissions inter-opérateurs.</p>
+<!-- EN-TÊTE AVEC FILTRE TEMPOREL -->
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div class="mm-page-header mb-0">
+        <h1>Situation des gains</h1>
+        <p>Vue d'ensemble des revenus générés par les frais de barème et les commissions inter-opérateurs.</p>
+    </div>
 </div>
 
 <!-- CONSERVATION STRICTE DES COULEURS ET DEGRADES D'ORIGINE -->
@@ -48,6 +52,20 @@ $pager = $pager ?? '';
             <div class="mm-stat-label">Total cumulé</div>
             <div class="mm-stat-value"><?= $stats['total_cumule'] ?> Ar</div>
             <div class="mm-stat-subtitle">Revenus totaux</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION GRAPHIQUE SEULE (Couleurs synchronisées avec les cartes) -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="mm-card mb-0">
+            <div class="mm-card-title mb-3">
+                <i class="bi bi-graph-up-arrow"></i> Évolution de la tendance des revenus
+            </div>
+            <div style="height: 260px; position: relative;">
+                <canvas id="revenueChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -145,6 +163,7 @@ $pager = $pager ?? '';
                     <th>Montant</th>
                     <th class="text-end">Frais barème</th>
                     <th class="text-end">Commission</th>
+                    <th class="text-end">Reduction</th>
                     <th class="text-end">Total frais</th>
                 </tr>
             </thead>
@@ -164,6 +183,7 @@ $pager = $pager ?? '';
                             <td><?= number_format($transaction['montant'], 2, ',', ' ') ?> Ar</td>
                             <td class="text-end"><?= number_format($transaction['frais_bareme'] ?? 0, 2, ',', ' ') ?> Ar</td>
                             <td class="text-end"><?= number_format($transaction['frais_commission'] ?? 0, 2, ',', ' ') ?> Ar</td>
+                            <td class="text-end"><?= number_format($transaction['reduction'] ?? 0, 2, ',', ' ') ?> Ar</td>
                             <td class="text-end"><?= number_format($transaction['frais_percus'] ?? 0, 2, ',', ' ') ?> Ar</td>
                         </tr>
                     <?php endforeach; ?>
@@ -222,5 +242,9 @@ $pager = $pager ?? '';
         </div>
     <?php endif; ?>
 </div>
+
+<!-- SCRIPT CHART.JS MATCHANT LES COULEURS (VERT ET VIOLET) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/assets/js/Operateur/gains.js"></script>
 
 <?= $this->endSection() ?>

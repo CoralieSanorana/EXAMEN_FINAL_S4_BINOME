@@ -390,3 +390,64 @@ JOIN comptes_clients c_source ON h.compte_source_id = c_source.id
 WHERE h.compte_destination_id IS NOT NULL;
 
 PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS commission_reduction (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    operateur_id INTEGER NOT NULL,
+    pourcentage_reduction REAL NOT NULL DEFAULT 0.0,
+    FOREIGN KEY (operateur_id) REFERENCES operateurs(id) ON DELETE CASCADE,
+    CONSTRAINT chk_commission_positive CHECK (pourcentage_reduction >= 0)
+);
+insert into commission_reduction(operateur_id,pourcentage_reduction) values (1,10);
+
+alter table historique_transactions add reduction real;
+
+CREATE VIEW vue_historique_portefeuille_clients AS
+SELECT 
+    h.id AS transaction_id,
+    h.compte_source_id AS compte_concerne_id,
+    t.code AS type_code,
+    t.nom AS type_nom,
+    h.montant AS montant_brut,
+    (h.frais_bareme + h.frais_commission) AS frais_appliques,
+    '-' AS sens_mouvement,
+    (h.montant + h.frais_bareme + h.frais_commission - h.reduction) AS impact_solde,
+    h.numero_destinataire AS telephone_tiers,
+    h.effectue_le
+FROM historique_transactions h
+JOIN types_operations t ON h.type_operation_id = t.id
+WHERE t.code IN ('RETRAIT', 'TRANSFERT')
+
+UNION ALL
+
+SELECT 
+    h.id AS transaction_id,
+    h.compte_source_id AS compte_concerne_id,
+    t.code AS type_code,
+    t.nom AS type_nom,
+    h.montant AS montant_brut,
+    0.0 AS frais_appliques,
+    '+' AS sens_mouvement,
+    h.montant AS impact_solde,
+    NULL AS telephone_tiers,
+    h.effectue_le
+FROM historique_transactions h
+JOIN types_operations t ON h.type_operation_id = t.id
+WHERE t.code = 'DEPOT'
+
+UNION ALL
+
+SELECT 
+    h.id AS transaction_id,
+    h.compte_destination_id AS compte_concerne_id,
+    'TRANSFERT_RECU' AS type_code,
+    'Transfert reçu' AS type_nom,
+    h.montant AS montant_brut,
+    0.0 AS frais_appliques,
+    '+' AS sens_mouvement,
+    h.montant AS impact_solde,
+    c_source.numero_telephone AS telephone_tiers,
+    h.effectue_le
+FROM historique_transactions h
+JOIN comptes_clients c_source ON h.compte_source_id = c_source.id
+WHERE h.compte_destination_id IS NOT NULL;
