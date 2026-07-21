@@ -86,26 +86,9 @@ class Operateur extends BaseController
     public function gains(): string
     {
         $historiqueModel = new HistoriqueTransactionModel();
-        $compteModel = new CompteClientModel();
         
-        // Récupérer les statistiques de gains depuis la vue
-        $statsGains = $historiqueModel->obtenirSituationGains();
-        
-        // Calculer les totaux
-        $gainsRetrait = 0;
-        $gainsTransfert = 0;
-        $totalCumule = 0;
-        
-        foreach ($statsGains as $stat) {
-            $totalLigne = (float) ($stat['total_gains_frais'] ?? 0);
-
-            if ($stat['type_operation'] === 'RETRAIT') {
-                $gainsRetrait += $totalLigne;
-            } elseif ($stat['type_operation'] === 'TRANSFERT') {
-                $gainsTransfert += $totalLigne;
-            }
-        }
-        $totalCumule = $gainsRetrait + $gainsTransfert;
+        // Récupérer les gains séparés par réseau (interne vs externe)
+        $gainsSepares = $historiqueModel->obtenirGainsSepares();
         
         // Récupérer le détail des transactions avec pagination
         $pager = \Config\Services::pager();
@@ -130,9 +113,17 @@ class Operateur extends BaseController
         
         $data = [
             'stats' => [
-                'gains_retrait' => number_format($gainsRetrait, 0, ',', ' '),
-                'gains_transfert' => number_format($gainsTransfert, 0, ',', ' '),
-                'total_cumule' => number_format($totalCumule, 0, ',', ' ')
+                'interne' => [
+                    'retrait' => number_format($gainsSepares['interne']['retrait'], 2, ',', ' '),
+                    'transfert' => number_format($gainsSepares['interne']['transfert'], 2, ',', ' '),
+                    'total' => number_format($gainsSepares['interne']['total'], 2, ',', ' ')
+                ],
+                'externe' => [
+                    'transfert' => number_format($gainsSepares['externe']['transfert'], 2, ',', ' '),
+                    'total' => number_format($gainsSepares['externe']['total'], 2, ',', ' '),
+                    'details' => $gainsSepares['externe']['details']
+                ],
+                'total_cumule' => number_format($gainsSepares['interne']['total'] + $gainsSepares['externe']['total'], 2, ',', ' ')
             ],
             'transactions' => $transactions,
             'pager' => $pagerLinks,
@@ -392,6 +383,26 @@ class Operateur extends BaseController
             'operateurs' => $operateurs
         ];
         return view('operateur/commission', $data);
+    }
+
+    public function montant(): string
+    {
+        $historiqueModel = new HistoriqueTransactionModel();
+        
+        // Récupérer les montants transférés par opérateur de destination
+        $montantsParOperateur = $historiqueModel->obtenirMontantsParOperateur();
+        
+        // Calculer le total global
+        $totalGlobal = 0;
+        foreach ($montantsParOperateur as $montant) {
+            $totalGlobal += (float) ($montant['total_a_envoyer'] ?? 0);
+        }
+        
+        $data = [
+            'montants' => $montantsParOperateur,
+            'total_global' => $totalGlobal
+        ];
+        return view('operateur/montant', $data);
     }
 
     public function addCommission()

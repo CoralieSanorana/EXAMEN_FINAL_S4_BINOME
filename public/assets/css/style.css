@@ -209,6 +209,64 @@ body {
 .mm-stat-card .mm-stat-value.positive { color: #1e8e3e; }
 .mm-stat-card .mm-stat-value.accent { color: var(--mm-secondary); }
 
+.mm-stat-card-sm {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.mm-stat-card-sm:hover {
+  background: #f0f1f3;
+  border-color: #dee2e6;
+  transform: translateY(-2px);
+}
+
+.mm-stat-label-sm {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--mm-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.mm-stat-value-sm {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--mm-text);
+}
+
+.mm-detail-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.mm-detail-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.mm-detail-item:last-child {
+  border-bottom: none;
+}
+
+.mm-detail-label {
+  font-size: 0.85rem;
+  color: var(--mm-muted);
+  font-weight: 500;
+}
+
+.mm-detail-value {
+  font-size: 0.9rem;
+  color: var(--mm-text);
+  font-weight: 600;
+}
+
 /* ---------- Buttons ---------- */
 .btn-mm-primary {
   background: var(--mm-secondary);
